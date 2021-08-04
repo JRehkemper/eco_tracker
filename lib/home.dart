@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:footer/footer.dart';
+import 'package:footer/footer_view.dart';
 import 'package:bike_app/teams.dart';
 import 'package:bike_app/welcome_guide.dart';
 import 'package:flutter_layouts/flutter_layouts.dart';
@@ -52,6 +53,7 @@ class _HomeScreen extends State{
   var history;
   var co2 = 0.0;
   late Future<List> historyFuture;
+  var helpSnackBar = SnackBar(content: Text("Tap on the Tiles to get to the other Screens."));
 
   @override
   void initState() {
@@ -88,7 +90,7 @@ class _HomeScreen extends State{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("EcoTracker")),
+      appBar: AppBar(title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("EcoTracker"), IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline))],) ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -102,14 +104,16 @@ class _HomeScreen extends State{
             ListTile(title: Text("Change your Password"),onTap: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));},),            Divider(),
             ListTile(title: Text("Logout"),onTap: () {storage.deleteAll(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));},),
             Divider(),
+            //ListTile(title: Text("Debugging (For Development only)"), onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));}),
+
             //ListTile(title: Text("Delete your Account"),onTap: () {deleteAccount();},),
             //Divider()
           ],
         ),
       ),
       //Body
-      body: SafeArea(child: Footer(
-        body: SingleChildScrollView(child: Stack(children: [
+      body: SafeArea(child:
+      SingleChildScrollView(child: Stack(children: [
               Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
                  width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),
               Column( children: [
@@ -186,8 +190,9 @@ class _HomeScreen extends State{
                           Spacer(),
                       ],),),),
                   ],),
+                Container(height: 75,),
                 //Leaderboard
-                Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
+                /*Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
                     child: Column(children: [
                       Padding(padding: EdgeInsets.only(top: 10), child: Text("Leaderboard", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
@@ -206,7 +211,7 @@ class _HomeScreen extends State{
                         }
                       }),
                     ],)
-                ),
+                ),*/
                 //News Channel
                 /*Container(padding: EdgeInsets.all(10), margin: EdgeInsets.only(top: 0, left: 25, bottom: 25, right: 25),  width: MediaQuery.of(context).size.width*80,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
@@ -230,11 +235,13 @@ class _HomeScreen extends State{
               ],),
             ],)
           ,),
-        footer: Container(padding: EdgeInsets.all(10),
+
+        /*footer: Container(padding: EdgeInsets.all(10),
           decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,-3))]),
           child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),),
-        ),
-      ));
+        ),*/
+      ),
+    bottomSheet: Container(width: MediaQuery.of(context).size.width, child: Padding(padding: EdgeInsets.only(top: 5, right: 15, bottom: 5, left: 15), child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),), decoration: BoxDecoration(boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,spreadRadius: 0,color: Colors.grey)], color: Colors.white, borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10))),));
   }
 
   Future<List> createScoreboardList() async {

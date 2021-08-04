@@ -64,11 +64,10 @@ class _SplashScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.green,
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text("EcoTracker"),
-          CircularProgressIndicator(),
+          Image.asset('assets/Images/icon.png', fit: BoxFit.contain)
         ],),
       ),
     );

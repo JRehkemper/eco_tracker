@@ -119,12 +119,14 @@ class _EmailActivationScreen extends State {
     return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
       body: Stack(children: [
         Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
-                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),
+                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,),
         Center(child: Padding(padding: EdgeInsets.all(20),child: Column(children: [
+          Spacer(),
           Text("We have sent you an Email with an activation Link.\n"),
-          Text("You need to activate your account befor you can login.\n"),
-          Text("Please check your EMail Inbox.\n"),
+          Text("Please check your EMail Inbox (also the spam).\n"),
+          Text("You need to activate your account before you can login.\n", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18), textAlign: TextAlign.center,),
           ElevatedButton(onPressed: () { continueLogin(); }, child: Text("Activation complete")),
+          Spacer(),
         ]),
         ),
       )

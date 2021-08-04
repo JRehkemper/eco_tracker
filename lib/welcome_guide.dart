@@ -21,12 +21,19 @@ class _WelcomeGuide extends State {
             child: Column(
               children: [
                 Text("Welcome to EcoTracker", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
-                Container(padding: EdgeInsets.symmetric(vertical: 20), child: Text("EcoTracker is a small project to motivate you, to leave your car at home and go by bike. This way you can help to safe some CO2 and safe the climate.\n\n"
-                    "Of course Skateboards, Inline Skates or any other vehicle does count as well, as long as you do not produce CO2 emissions.\n\n"
-                    "By tracking your routes and tours, you will collect Kilometers and earn Achievements. You will also climb the leaderboard and compare yourself with others.\n\n"
-                    "You could also join a team and climb the leaderboard as a group.\n\n"
-                    "This app is only a small project, but every little bit helps to stop the climate change.\n"
-                    "And together we can do this with just a little afford and alot of fun."),),
+                Container(padding: EdgeInsets.symmetric(vertical: 30), child: Column(children: [
+                  Text("Score Points and save CO2 by riding your bike, skating or walking. All together as a Community against the climat change.\n"),
+                  Text("EcoTracker is a way to motivate you, to reduce your carbon footprint. Every kilometer you ride your bike or skates or simplay walk, you earn points.\n"
+                      "This way you can compete against other users and earn achievements. You will also help to reach community goals and motivate others."
+                      "You can create and join teams to combine your scores and climb the leaderboard.\n"
+                      "This way, we can all work together and help to stop the climate change.\n"),
+                ],),),
+
+
+
+
+
+
                 Spacer(),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [Checkbox(value: guide, onChanged: (value) {setState(() {
                     guide = value!;

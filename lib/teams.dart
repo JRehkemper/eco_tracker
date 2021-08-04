@@ -47,7 +47,7 @@ class _TeamsScreen extends State {
             {
               return InkWell(onTap: (){changeTeam(teamslist[index][0]);}, child: ListTile(
                 leading: Text("${index + 1}."),
-                title: Text("${teamslist[index][1]}(${teamslist[index][0]})"),
+                title: Text("${teamslist[index][1]}"),
                 trailing: Text("${teamslist[index][2]}"),
               )
             );});

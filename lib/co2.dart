@@ -76,14 +76,16 @@ class _CO2Screen extends State {
   if(response.statusCode != 200) {return;}
   var resp = json.decode(response.body);
   setState(() {
-  yourScore = resp['totalDistance'].round().toDouble();
+  var tmpYourScore = (resp['totalDistance']*128.1/1000).toStringAsFixed(3);
+  yourScore = double.parse(tmpYourScore);
   });
   print("YourScore");
   response = await functions.getCommunityScore();
   if(response.statusCode != 200) {return;}
   resp = json.decode(response.body);
   setState(() {
-  communityScore = resp['distance'].round().toDouble();
+  var tmpCommunityScore = (resp['distance']*128.1/1000).toStringAsFixed(3);
+  communityScore = double.parse(tmpCommunityScore);
   });
   print("communityScore");
   return null;

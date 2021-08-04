@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,11 @@ class _RouteRecording extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Record your Route"), leading: IconButton(onPressed: () {stopRecording(); postimer.cancel(); try{rectimer.cancel();}catch (error){} Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));}, icon: Icon(Icons.arrow_back)),),
+    return Scaffold(appBar: AppBar(title: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text("Record your Route"),
+      IconButton(onPressed: () {showAlertDialogNoButton(context, "Help", "");}, icon: Icon(Icons.help_outline))
+    ],),
+      leading: IconButton(onPressed: () {if(!positionfound){postimer.cancel(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));} else {confirmRoute();}}, icon: Icon(Icons.arrow_back)),),
     body: Center(
       child: Column(children: [
         /*Text("When you hit Start, we will record your Route in Intervals"),
@@ -126,18 +131,27 @@ class _RouteRecording extends State {
             ),
           ]),
           Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Padding(padding: EdgeInsets.symmetric(vertical: 5),
+            /*Padding(padding: EdgeInsets.symmetric(vertical: 5),
               child: FloatingActionButton(onPressed: () {showAlertDialogNoButton(context, "Help",
-                "");}, child: Icon(Icons.help_outline),),),
+                "");}, child: Icon(Icons.help_outline),),),*/
             Padding(padding: EdgeInsets.symmetric(vertical: 5),
-              child: FloatingActionButton(onPressed: () {if(!positionfound){ScaffoldMessenger.of(context).showSnackBar(positionSnackbar); return;} startRecording();}, child: Icon(recording? Icons.stop : Icons.play_arrow),),),
+              child: FloatingActionButton(onPressed: () {if(!positionfound){ScaffoldMessenger.of(context).showSnackBar(positionSnackbar); return;} startRecording();}, child: Icon(recording? Icons.pause : Icons.fiber_manual_record),),),
+            /*Padding(padding: EdgeInsets.symmetric(vertical: 5),
+              child: FloatingActionButton(onPressed: () {if(!positionfound){ScaffoldMessenger.of(context).showSnackBar(positionSnackbar); return;} resetRecording();}, child: Icon(Icons.repeat),),),*/
             Padding(padding: EdgeInsets.symmetric(vertical: 5),
-              child: FloatingActionButton(onPressed: () {if(!positionfound){ScaffoldMessenger.of(context).showSnackBar(positionSnackbar); return;} resetRecording();}, child: Icon(Icons.repeat),),),
-            Padding(padding: EdgeInsets.symmetric(vertical: 5),
-              child: FloatingActionButton(onPressed: () {if(!positionfound){ScaffoldMessenger.of(context).showSnackBar(positionSnackbar); return;} stopRecording(); showAlertDialogTwoButton(context, "Confirm Route", "Do you want to stop and submit your Route?\nWe will only recieve how far you drove. No positiondata will be sent.");}, child: Icon(Icons.check),),),
+              child: FloatingActionButton(onPressed: () {confirmRoute();}, child: Icon(Icons.check),),),
           ],),
       ],),),
     );
+  }
+
+  void confirmRoute() {
+    if (!positionfound) {
+      ScaffoldMessenger.of(context).showSnackBar(positionSnackbar);
+      return;
+    }
+    stopRecording();
+    showAlertDialogTwoButton(context, "Confirm Route", "Do you want to stop and submit your Route?\nWe will only recieve how far you drove. No positiondata will be sent.");
   }
 
   void startForegroundService() async {
@@ -222,6 +236,7 @@ class _RouteRecording extends State {
           {
             positionfound = true;
             print("position found");
+            startRecording();
           }
       });
     });
@@ -269,10 +284,29 @@ class _RouteRecording extends State {
           {
             ScaffoldMessenger.of(context).showSnackBar(submitErrSnackbar);
           }
-        resetRecording(); Navigator.pop(context);},
+        resetRecording();
+        Navigator.pop(context);
+        postimer.cancel();
+        try{
+          rectimer.cancel();
+        } catch (error) {}
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+        },
     );
     Widget button_2 = TextButton(
-      child: Text("No"),
+      child: Text("Delete Route"),
+      onPressed: ()  {
+        resetRecording();
+        postimer.cancel();
+        try {
+          rectimer.cancel();
+        }
+        catch (error) {}
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+      },
+    );
+    Widget button_3 = TextButton(
+      child: Text("Cancle"),
       onPressed: () => Navigator.pop(context),
     );
 
@@ -282,7 +316,8 @@ class _RouteRecording extends State {
       content: Text(text),
       actions: [
         button_1,
-        button_2
+        button_2,
+        button_3
       ],
     );
 
@@ -299,7 +334,7 @@ class _RouteRecording extends State {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(title),
-      content: Text("If you want to start your tour, press the Start-Icon. The Icon will change to a Stop-Icon.\nIf you finished your tour press the same button again.\nAfter that you can submit your tour with the Checkmark.\nIf you want to delete the tour and start a new one use the Refresh-Icon."),
+      content: Text("EcoTracker will Record your Distance as soon as your GPS Location is detected.\nIf you want to submit your route, click on the checkmack in the bottom right.\nYou can Pause and Continue the recording with the Button above."),
       actions: [
       ],
     );
