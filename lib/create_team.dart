@@ -14,7 +14,7 @@ class _CreateTeamScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Create a new Team")),
-      body: Center(child: Column(children: [
+      body: SingleChildScrollView(child: Center(child: Column(children: [
         Padding(padding: EdgeInsets.all(15),
           child: Text("You are about to create your own Team. In a Team you can work together to earn more Points and climb the leaderboard.",),),
         Padding(padding: EdgeInsets.all(15),
@@ -23,7 +23,7 @@ class _CreateTeamScreen extends State {
           child: TextField(decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter Teamname",), controller: teamnameCon,),),
         Padding(padding: EdgeInsets.all(15),
           child: ElevatedButton(onPressed: () {createTeam();}, child: Text("Create"),),)
-    ],)));
+    ],))),);
   }
 
   Future createTeam() async {

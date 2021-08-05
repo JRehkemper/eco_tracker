@@ -23,7 +23,7 @@ class _ChangePasswordScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
-      body: Center(
+      body: SingleChildScrollView(child: Center(
           child: Column(
             children: [
               Padding(padding: EdgeInsets.all(15),
@@ -42,7 +42,7 @@ class _ChangePasswordScreen extends State {
                   child: ElevatedButton(onPressed: () {checkPassword();}, child: Text("Continue"),)),
             ],
           )
-      ),
+      ),),
     );
   }
 

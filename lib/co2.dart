@@ -30,7 +30,7 @@ class _CO2Screen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Saved CO2")),
-    body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+    body: SingleChildScrollView(child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
           child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
@@ -68,7 +68,7 @@ class _CO2Screen extends State {
         ],)
 
 
-    ));
+    ),),);
   }
 
   Future calculateNumbers() async {

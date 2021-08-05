@@ -36,14 +36,14 @@ class _TeamsScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Teams")),
-      body: Center(child: Column(children: [
+      body:  Center(child: Column(children: [
         Padding(padding: EdgeInsets.all(15),child: Text("Leaderboard of Teams", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
         ListTile(title: Text("Teamname", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),), trailing: Text("Distance in Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),)),
         FutureBuilder(future: teamslistFuture, builder: (context, AsyncSnapshot snapshot) {
           if(!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return ListView.builder(physics: NeverScrollableScrollPhysics(), shrinkWrap:true, itemCount: teamslist.length, itemBuilder: (BuildContext context, int index)
+            return ListView.builder(shrinkWrap:true, itemCount: teamslist.length, itemBuilder: (BuildContext context, int index)
             {
               return InkWell(onTap: (){changeTeam(teamslist[index][0]);}, child: ListTile(
                 leading: Text("${index + 1}."),
@@ -55,7 +55,7 @@ class _TeamsScreen extends State {
         }),
         Spacer(),
         Padding(padding: EdgeInsets.symmetric(vertical: 15), child: FloatingActionButton(onPressed: () {createNewTeam();}, child: Icon(Icons.add))),
-      ],)),);
+      ],),),);
   }
 
   Future<List> createTeamsList() async {

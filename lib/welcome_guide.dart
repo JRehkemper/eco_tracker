@@ -15,10 +15,11 @@ class _WelcomeGuide extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(margin: EdgeInsets.all(40),
-          child: Center(
-            child: Column(
+      body:  SafeArea(child:
+       Container(margin: EdgeInsets.all(40),
+          child:
+          Center(
+            child:  Column(
               children: [
                 Text("Welcome to EcoTracker", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
                 Container(padding: EdgeInsets.symmetric(vertical: 30), child: Column(children: [
@@ -27,7 +28,7 @@ class _WelcomeGuide extends State {
                       "This way you can compete against other users and earn achievements. You will also help to reach community goals and motivate others."
                       "You can create and join teams to combine your scores and climb the leaderboard.\n"
                       "This way, we can all work together and help to stop the climate change.\n"),
-                ],),),
+                ]),),
 
 
 
@@ -40,10 +41,10 @@ class _WelcomeGuide extends State {
                   });}),Text("Don't show this again")],),
                 ElevatedButton(onPressed: () {welcomeGuideShown = true; functions.disableWelcomeGuid(guide); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));}, child: Text("Continue")),
               ],
-            ),
+            ),)
           ),
-        )
-      )
+
+      ),
     );
   }
 

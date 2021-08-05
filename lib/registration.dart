@@ -35,7 +35,7 @@ class _RegistrationScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Registration"),),
-      body: Center(child: Column(children: [
+      body: SingleChildScrollView(child: Center(child: Column(children: [
         Padding(padding: EdgeInsets.all(15),
           child: Text("Register your Account")),
         Padding(padding: EdgeInsets.all(10),
@@ -59,7 +59,7 @@ class _RegistrationScreen extends State {
 
       ],),
       )
-    );
+    ),);
   }
 
   void registrationProcedure(String email, String username, String password1, String password2, BuildContext context) async {

@@ -25,7 +25,7 @@ class _LeaderBoard extends State
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Leaderboard"),),
-        body: Center(
+        body: SingleChildScrollView(child: Center(
             child: Column(children: [
               Padding(padding: EdgeInsets.only(top: 15), child: Text("Leaderboard", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),),
               ListTile(title: Text("Username", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),), trailing: Text("Distance in Km", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),),
@@ -47,7 +47,7 @@ class _LeaderBoard extends State
                 }
               }),
             ],)
-        )
+        ),)
     );
   }
 

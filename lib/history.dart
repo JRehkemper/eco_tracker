@@ -26,7 +26,7 @@ class _HistoryScreen extends State
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Your last routes"),),
-      body: Center(
+      body: SingleChildScrollView(child: Center(
         child: Column(children: [
           Padding(padding: EdgeInsets.only(top: 15), child: Text("Your History", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),),
           ListTile(title: Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),), trailing: Text("Distance in Km", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),),
@@ -48,7 +48,7 @@ class _HistoryScreen extends State
         }),
         ],)
       )
-    );
+    ),);
   }
 
   Future<List> getYourHistory() async {

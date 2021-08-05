@@ -32,7 +32,7 @@ class _ResetPasswordScreen extends State {
         appBar: AppBar(
           title: Text("Reset your Password"),
         ),
-        body: Stack(children: [
+        body: SingleChildScrollView(child: Stack(children: [
           Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
             width: MediaQuery.of(context).size.width,),
           Center(
@@ -54,7 +54,7 @@ class _ResetPasswordScreen extends State {
                 ],
               )
           ),
-        ],)
+        ],),)
     );
   }
 

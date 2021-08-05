@@ -33,7 +33,7 @@ class _LoginScreen extends State {
         appBar: AppBar(
           title: Text("Login or Register"),
         ),
-        body: Stack(children: [
+        body: SingleChildScrollView(child: Stack(children: [
           Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
             width: MediaQuery.of(context).size.width,),
           Center(
@@ -62,7 +62,7 @@ class _LoginScreen extends State {
                 ],
               )
           ),
-        ],)
+        ],),)
   );
   }
   void loginProcedure(String username, String password, BuildContext context) async {
@@ -117,7 +117,7 @@ class _EmailActivationScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
-      body: Stack(children: [
+      body: SingleChildScrollView(child: Stack(children: [
         Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
                  width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,),
         Center(child: Padding(padding: EdgeInsets.all(20),child: Column(children: [
@@ -130,7 +130,7 @@ class _EmailActivationScreen extends State {
         ]),
         ),
       )
-    ]),);
+    ]),),);
   }
 
   void continueLogin() async {
