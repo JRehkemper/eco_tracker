@@ -33,10 +33,12 @@ class _LoginScreen extends State {
         appBar: AppBar(
           title: Text("Login or Register"),
         ),
-        body: SingleChildScrollView(child: Stack(children: [
+        body: Stack(children: [
           Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
             width: MediaQuery.of(context).size.width,),
-          Center(
+          SingleChildScrollView(child: ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+              child: Center(
               child: Column(
                 children: [
                   Container(padding: EdgeInsets.all(15), margin: EdgeInsets.only(top: 140),
@@ -53,16 +55,16 @@ class _LoginScreen extends State {
                     child: TextButton(child: Text("Forgot my password",style: TextStyle(color: Colors.black)), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));},),),
                   Padding(padding: EdgeInsets.all(0),
                       child: ElevatedButton(onPressed: () => loginProcedure(usernameCon.text, passwordCon.text, context), child: Text("Login",))),
-                  Spacer(),
+                  //Spacer(),
                   Padding(padding: EdgeInsets.only(top: 50),
                       child: Text("You are new here? Create an Account.")),
                   Padding(padding: EdgeInsets.all(10),
                     child: ElevatedButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RegistrationScreen())), child: Text("Registration"),),),
-                  Spacer(),
+                  //Spacer(),
                 ],
-              )
-          ),
-        ],),)
+              ),)
+          ),),
+        ],),
   );
   }
   void loginProcedure(String username, String password, BuildContext context) async {
@@ -117,7 +119,9 @@ class _EmailActivationScreen extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
-      body: SingleChildScrollView(child: Stack(children: [
+      body: SingleChildScrollView(child: ConstrainedBox(
+    constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+    child: Stack(children: [
         Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
                  width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,),
         Center(child: Padding(padding: EdgeInsets.all(20),child: Column(children: [
@@ -130,7 +134,7 @@ class _EmailActivationScreen extends State {
         ]),
         ),
       )
-    ]),),);
+    ]),),),);
   }
 
   void continueLogin() async {

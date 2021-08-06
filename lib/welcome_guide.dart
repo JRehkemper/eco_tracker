@@ -18,7 +18,9 @@ class _WelcomeGuide extends State {
       body:  SafeArea(child:
        Container(margin: EdgeInsets.all(40),
           child:
-          Center(
+          SingleChildScrollView(child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          child: Center(
             child:  Column(
               children: [
                 Text("Welcome to EcoTracker", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
@@ -35,13 +37,13 @@ class _WelcomeGuide extends State {
 
 
 
-                Spacer(),
+                //Spacer(),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [Checkbox(value: guide, onChanged: (value) {setState(() {
                     guide = value!;
                   });}),Text("Don't show this again")],),
                 ElevatedButton(onPressed: () {welcomeGuideShown = true; functions.disableWelcomeGuid(guide); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));}, child: Text("Continue")),
               ],
-            ),)
+            ),),),)
           ),
 
       ),

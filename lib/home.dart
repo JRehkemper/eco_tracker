@@ -104,7 +104,7 @@ class _HomeScreen extends State{
             ListTile(title: Text("Change your Password"),onTap: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));},),            Divider(),
             ListTile(title: Text("Logout"),onTap: () {storage.deleteAll(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));},),
             Divider(),
-            //ListTile(title: Text("Debugging (For Development only)"), onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));}),
+            //ListTile(title: Text("Debugging (For Development only)"), onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EmailActivationScreen()));}),
 
             //ListTile(title: Text("Delete your Account"),onTap: () {deleteAccount();},),
             //Divider()
