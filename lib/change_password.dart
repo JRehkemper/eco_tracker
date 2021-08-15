@@ -59,7 +59,8 @@ class _ChangePasswordScreen extends State {
         return;
       }
     var salt = await functions.readSaltFromStorage();
-    var oldPassword = Crypt.sha256(passwordOldCon.text, salt: salt).toString();
+    //var oldPassword = Crypt.sha256(passwordOldCon.text, salt: salt).toString();
+    var oldPassword = passwordOldCon.text;
     var response = await functions.checkPassword(oldPassword);
     if(response.statusCode != 200)
     {
@@ -69,7 +70,8 @@ class _ChangePasswordScreen extends State {
       return;
     }
     var resp = json.decode(response.body);
-    var password = Crypt.sha256(password1Con.text, salt: salt).toString();
+    //var password = Crypt.sha256(password1Con.text, salt: salt).toString();
+    var password = password1Con.text;
     response = await functions.changePassword(password);
     if(response.statusCode != 200)
       {

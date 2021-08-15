@@ -99,18 +99,18 @@ class _RegistrationScreen extends State {
     print(resp);
 
     //Hashing Password
-    var salt = functions.generateRandomString(32);
-    var password = Crypt.sha256(password1, salt: salt).toString();
+    var salt = functions.generateRandomString(16);
+    //var password = Crypt.sha256(password1,rounds: 5000, salt: salt).toString();
 
     //Register User at Server
-    response = await functions.postRegister(email, username, password, salt);
+    response = await functions.postRegister(email, username, password1, salt);
     if(response.statusCode != 200) { setState(() { registrationFailed = true; }); return;}
 
     storage.write(key: "reg_username", value: username);
     storage.write(key: "reg_email", value: email);
     storage.write(key: "reg_salt", value: salt);
     storage.write(key: "teamID", value: "0");
-    tmp_user_password = password;
+    //tmp_user_password = password1;
 
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => EmailActivationScreen()));
   }

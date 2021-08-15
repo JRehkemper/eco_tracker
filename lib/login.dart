@@ -77,7 +77,8 @@ class _LoginScreen extends State {
     if(response.statusCode != 200) {setState(() { loginFailed = true; });return;}
     Map<String, dynamic> salt = json.decode(response.body);
 
-    password = Crypt.sha256(password, salt: salt["salt"]).toString();
+    //password = Crypt.sha256(password, rounds: 5000, salt: salt["salt"]).toString();
+    //print("password $password");
     response = await functions.getLoginRequest(username, password);
     if(response.statusCode != 200) {setState(() {loginFailed = true; }); return;}
     Map<String, dynamic> jwt = json.decode(response.body);
