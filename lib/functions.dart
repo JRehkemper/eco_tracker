@@ -334,4 +334,24 @@ class Functions {
     print(position);
     return position;
   }
+
+  Future getAchievmentList() async {
+    var access_token = await readAccessTokenFromStorage();
+    var refresh_token = await readRefreshTokenFromStorage();
+    var heads = new Map<String, String>();
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
+    final response = await http.post(Uri.parse(server+"/score/achievmentlist"), headers: heads);
+    //print(response.body);
+    return response;
+  }
+
+  Future getYourAchievments() async {
+    var access_token = await readAccessTokenFromStorage();
+    var refresh_token = await readRefreshTokenFromStorage();
+    var heads = new Map<String, String>();
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
+    final response = await http.post(Uri.parse(server+"/score/yourachievments"), headers: heads);
+    //print(response.body);
+    return response;
+  }
 }
