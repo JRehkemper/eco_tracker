@@ -178,7 +178,7 @@ class _RouteRecording extends State {
           recordPosition();
         });
       });
-      startForegroundService();
+      //startForegroundService();
     }
     else if(recording) {
       stopRecording();
@@ -244,6 +244,7 @@ class _RouteRecording extends State {
 
   void initMap() async {
     await functions.determinePosition();
+    startForegroundService();
     postimer = Timer.periodic(Duration(seconds: 1), (Timer t) async
     {
       getPosition();
@@ -279,18 +280,19 @@ class _RouteRecording extends State {
         if(response.statusCode == 200)
           {
             ScaffoldMessenger.of(context).showSnackBar(submitSnackbar);
+            resetRecording();
+            Navigator.pop(context);
+            postimer.cancel();
+            try{
+              rectimer.cancel();
+            } catch (error) {}
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
           }
         else
           {
             ScaffoldMessenger.of(context).showSnackBar(submitErrSnackbar);
           }
-        resetRecording();
-        Navigator.pop(context);
-        postimer.cancel();
-        try{
-          rectimer.cancel();
-        } catch (error) {}
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+
         },
     );
     Widget button_2 = TextButton(

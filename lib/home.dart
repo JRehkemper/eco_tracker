@@ -45,6 +45,8 @@ class _HomeScreen extends State{
   var score = 0.0;
   late Future<List> scoreboardFuture;
   var scoreboard;
+  late Future<List> communityRoutesFuture;
+  var communityRoutes;
   var yourRank = 0;
   var teamRank;
   var team = false;
@@ -69,6 +71,7 @@ class _HomeScreen extends State{
     });
     historyFuture = createHistory();
     scoreboardFuture = createScoreboardList();
+    communityRoutesFuture = createCommunityList();
     super.initState();
     functions.readUsernameFromStorage().then((result) {
       setState(() {
@@ -190,28 +193,29 @@ class _HomeScreen extends State{
                           Spacer(),
                       ],),),),
                   ],),
-                Container(height: 75,),
-                //Leaderboard
-                /*Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
+
+                //Community History
+                Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
                     child: Column(children: [
-                      Padding(padding: EdgeInsets.only(top: 10), child: Text("Leaderboard", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
-                      FutureBuilder(future: scoreboardFuture, builder: (context, AsyncSnapshot snapshot) {
+                      Padding(padding: EdgeInsets.only(top: 10), child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
+                      FutureBuilder(future: communityRoutesFuture, builder: (context, AsyncSnapshot snapshot) {
                         if(!snapshot.hasData) {
                           return Center(child: CircularProgressIndicator());
                         } else {
-                          return ListView.builder(physics: NeverScrollableScrollPhysics(), shrinkWrap:true, itemCount: 3, itemBuilder: (BuildContext context, int index)
+                          return ListView.builder(physics: NeverScrollableScrollPhysics(), shrinkWrap:true, itemCount: 10, itemBuilder: (BuildContext context, int index)
                           {
                             return ListTile(
-                              leading: Text("${index+1}"),
-                              title:Text("${scoreboard[index][0]}"),
-                              trailing: Text("${scoreboard[index][1]}"),
+                              leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}"),
+                              title:Text("${communityRoutes[index][0]}"),
+                              trailing: Text("${communityRoutes[index][1]}"),
                             );
                           });
                         }
                       }),
                     ],)
-                ),*/
+                ),
+                Container(height: 75,),
                 //News Channel
                 /*Container(padding: EdgeInsets.all(10), margin: EdgeInsets.only(top: 0, left: 25, bottom: 25, right: 25),  width: MediaQuery.of(context).size.width*80,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
@@ -276,6 +280,15 @@ class _HomeScreen extends State{
             });
           }
       }
+    return resp;
+  }
+
+  Future<List> createCommunityList() async {
+    var response = await functions.getCommunityRoutes();
+    var resp = json.decode(response.body);
+    setState(() {
+      communityRoutes = resp;
+    });
     return resp;
   }
 

@@ -354,4 +354,14 @@ class Functions {
     //print(response.body);
     return response;
   }
+
+  Future getCommunityRoutes() async {
+    var access_token = await readAccessTokenFromStorage();
+    var refresh_token = await readRefreshTokenFromStorage();
+    var heads = new Map<String, String>();
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
+    final response = await http.post(Uri.parse(server+"/score/communityroutes"), headers: heads);
+    //print(response.body);
+    return response;
+  }
 }
