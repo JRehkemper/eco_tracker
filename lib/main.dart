@@ -7,6 +7,8 @@ final storage = FlutterSecureStorage();
 final server = 'https://jrehkemper.de/bikeapp';
 var tmp_user_password = "";
 var welcomeGuideShown = false;
+var guestLogin = false;
+var offline = false;
 
 void main() {
   runApp(MyApp());

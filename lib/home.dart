@@ -59,35 +59,52 @@ class _HomeScreen extends State{
 
   @override
   void initState() {
-    functions.getYourHistory().then((response) {
-      if(response.statusCode != 200) {return;}
-      var resp = json.decode(response.body);
-      setState(() {
-        history = resp;
-        print(history);
-        //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
-        //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
-      });
-    });
-    historyFuture = createHistory();
-    scoreboardFuture = createScoreboardList();
+    print(guestLogin);
     communityRoutesFuture = createCommunityList();
+    scoreboardFuture = createScoreboardList();
+    if (!guestLogin) {
+      functions.getYourHistory().then((response) {
+        if (response.statusCode != 200) {
+          return;
+        }
+        var resp = json.decode(response.body);
+        setState(() {
+          history = resp;
+          print(history);
+          //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
+          //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
+        });
+      });
+      historyFuture = createHistory();
+      functions.readUsernameFromStorage().then((result) {
+        setState(() {
+          username = result;
+        });
+      });
+      functions.getYourScore().then((response) {
+        if (response.statusCode != 200) {
+          return;
+        }
+        var resp = json.decode(response.body);
+        setState(() {
+          score = resp['totalDistance'];
+          if (score == null) {
+            score = 0.0;
+          }
+          co2 = score * 128.1 / 1000;
+        });
+        print("Score updated");
+      });
+    }
+    else {
+      setState(() {
+        historyFuture = guestHistory();
+        history = [["","0.00", "1970-01-01T00:00:00.000Z"]];
+        yourRank = 0;
+      });
+    }
+    checkSavedRoutes();
     super.initState();
-    functions.readUsernameFromStorage().then((result) {
-      setState(() {
-        username = result;
-      });
-    });
-    functions.getYourScore().then((response) {
-      if(response.statusCode != 200) {return;}
-      var resp = json.decode(response.body);
-      setState(() {
-        score = resp['totalDistance'];
-        if (score == null) {score = 0.0;}
-        co2 = score*128.1/1000;
-      });
-      print("Score updated");
-    });
   }
 
   @override
@@ -116,21 +133,24 @@ class _HomeScreen extends State{
       ),
       //Body
       body: SafeArea(child:
-      SingleChildScrollView(child: Stack(children: [
-              Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
-                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),
+          SingleChildScrollView(child: Stack(children: [
+              /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
+                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),*/
+              Container(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors:[Color(0xff67bc69), Color(0xff4CAF50)])), child:
               Column( children: [
                 //Hello
                 //Container(child: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), alignment: Alignment.centerLeft,),
-                Container(margin: EdgeInsets.only(top: 20, left: 10, bottom: 10, right: 10), padding: EdgeInsets.all(20), alignment: Alignment.topLeft,
-                  child: Text("Welcome Back\n${username}!", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),),),
-                Container(height: MediaQuery.of(context).size.height*0.05,),
+                Container(margin: EdgeInsets.only(top: 20, left: 10, bottom: 0, right: 10), padding: EdgeInsets.all(20), alignment: Alignment.topLeft,
+                  child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),),
+                //Container(height: MediaQuery.of(context).size.height*0.05,),
+                Container(child: offline?Text("Our Servers are currently down for maintenance. If you record a route it will be submitted, as soon as the Servers are back online."):Text("")),
+                Container(child: guestLogin?ElevatedButton(onPressed: (()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()))), child: Text("Go to Login")):Text(""), margin: EdgeInsets.only(bottom: 30),),
                 //Tiles
                 GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
                     child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                       child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                         Text("Your Score:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
                         Spacer(),
@@ -139,7 +159,7 @@ class _HomeScreen extends State{
                       ],),),),
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
                     child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                       child: Column(children: [
                         Text("You saved:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
                         Spacer(),
@@ -148,7 +168,7 @@ class _HomeScreen extends State{
                       ],),),),
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
                     child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                       child: Column(children: [
                         Text("Your Rank:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
                         Spacer(),
@@ -157,16 +177,17 @@ class _HomeScreen extends State{
                       ],),),),
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
                       child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                         child: Column(children: [
                           Text("Team Rank:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
                           Spacer(),
                           Text(team? "#$teamRank":"No Team", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           Spacer(),
                         ],),),),
+                    // Your History
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
                       child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                         child: Column(children: [
                           Text("History", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
                           Spacer(),
@@ -185,7 +206,7 @@ class _HomeScreen extends State{
                       ],),),),
                     InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen()));},
                       child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                         child: Column(children: [
                           Text("", style: TextStyle(fontSize: 18,), textAlign: TextAlign.center,),
                           Spacer(),
@@ -196,7 +217,7 @@ class _HomeScreen extends State{
 
                 //Community History
                 Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
                     child: Column(children: [
                       Padding(padding: EdgeInsets.only(top: 10), child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
                       FutureBuilder(future: communityRoutesFuture, builder: (context, AsyncSnapshot snapshot) {
@@ -236,7 +257,7 @@ class _HomeScreen extends State{
                       }),
                     ],)
                 ),*/
-              ],),
+              ],),),
             ],)
           ,),
 
@@ -254,19 +275,19 @@ class _HomeScreen extends State{
     setState(() {
       scoreboard = resp;
     });
-    var username = await functions.readUsernameFromStorage();
-    for(int i = 0; i < scoreboard.length; i++)
-      {
-        if(scoreboard[i][0] == username)
-          {
-            setState(() {
-              yourRank = i + 1;
-              userID = scoreboard[i][2];
-              teamID = scoreboard[i][3];
-            });
-          }
+    if(!guestLogin) {
+      var username = await functions.readUsernameFromStorage();
+      for (int i = 0; i < scoreboard.length; i++) {
+        if (scoreboard[i][0] == username) {
+          setState(() {
+            yourRank = i + 1;
+            userID = scoreboard[i][2];
+            teamID = scoreboard[i][3];
+          });
+        }
       }
-    storage.write(key: "userID", value: userID.toString());
+      storage.write(key: "userID", value: userID.toString());
+    }
     response = await functions.getTeamsList();
     resp = json.decode(response.body);
     print(resp);
@@ -319,6 +340,24 @@ class _HomeScreen extends State{
         print("Error while deleting account");
       }
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RegistrationScreen()));
+  }
+
+  Future<List> guestHistory() async {
+    print("guestHistory()");
+    return await new Future(() => [["1970-01-01T00:00:00.000Z","1","2"]]);
+  }
+
+  void checkSavedRoutes() async {
+    var safedRoute = await storage.read(key: "lastRoute");
+    if (safedRoute != null && safedRoute != "")
+      {
+        var response = await functions.submitRoute(double.parse(safedRoute));
+        //print(response.body);
+        if(response.statusCode == 200)
+        {
+          storage.delete(key: "lastRoute");
+        }
+      }
   }
 
 }

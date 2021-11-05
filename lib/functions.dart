@@ -45,7 +45,10 @@ class Functions {
   Future getRefreshToken(String access_token, String refresh_token) async {
     var map = new Map<String, String>();
     map['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/token/refresh"),headers: map);
+    final response = await http.post(Uri.parse(server+"/token/refresh"),headers: map).timeout(Duration(seconds: 1),
+      onTimeout: () {
+        return http.Response('Error', 502);
+      });
     print(response.body);
     return response;
   }
@@ -97,12 +100,20 @@ class Functions {
   }
 
   Future<String> readAccessTokenFromStorage() async {
-    var access_token = await storage.read(key: "access_token");
+    var access_token;
+    if(!guestLogin) {
+      access_token = await storage.read(key: "access_token");
+    }
+    else {  access_token = ""; }
     return access_token!;
   }
 
   Future<String> readRefreshTokenFromStorage() async {
-    var refresh_token = await storage.read(key: "refresh_token");
+    var refresh_token;
+    if(!guestLogin) {
+      refresh_token = await storage.read(key: "refresh_token");
+    }
+    else { refresh_token = ""; }
     return refresh_token!;
   }
 
@@ -192,20 +203,20 @@ class Functions {
   }
 
   Future getScoreBoard() async {
-    var access_token = await readAccessTokenFromStorage();
+    /*var access_token = await readAccessTokenFromStorage();
     var refresh_token = await readRefreshTokenFromStorage();
     var heads = new Map<String, String>();
-    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/score/scoreboard"), headers: heads);
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;*/
+    final response = await http.post(Uri.parse(server+"/score/scoreboard"));
     return response;
   }
 
   Future getTeamsList() async {
-    var access_token = await readAccessTokenFromStorage();
+    /*var access_token = await readAccessTokenFromStorage();
     var refresh_token = await readRefreshTokenFromStorage();
     var heads = new Map<String, String>();
-    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/score/teamslist"), headers: heads);
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;*/
+    final response = await http.post(Uri.parse(server+"/score/teamslist"));
     return response;
   }
 
@@ -356,11 +367,11 @@ class Functions {
   }
 
   Future getCommunityRoutes() async {
-    var access_token = await readAccessTokenFromStorage();
+    /*var access_token = await readAccessTokenFromStorage();
     var refresh_token = await readRefreshTokenFromStorage();
     var heads = new Map<String, String>();
-    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/score/communityroutes"), headers: heads);
+    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;*/
+    final response = await http.post(Uri.parse(server+"/score/communityroutes"));
     //print(response.body);
     return response;
   }

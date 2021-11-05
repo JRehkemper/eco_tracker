@@ -102,6 +102,7 @@ class _LoginScreen extends State {
     var refresh_token = await storage.read(key: "refresh_token");
     response = await functions.getAuthTest(access_token!, refresh_token!);
     if(response.statusCode != 200) { setState(() { loginFailed = true; }); return;}
+    guestLogin = false;
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
   }
 

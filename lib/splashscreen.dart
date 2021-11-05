@@ -29,7 +29,12 @@ class _SplashScreen extends State {
           //showAlertDialog(context, response.body);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         }
+      else if (response.statusCode == 502)
+        {
+          offline = true;
+        }
       else {
+        guestLogin = true;
         functions.welcomeGuidCheck().then((guide) {
           print(guide);
           if(guide == "true" && welcomeGuideShown == false)
@@ -38,7 +43,9 @@ class _SplashScreen extends State {
             }
           else if(guide == "false" || welcomeGuideShown == true)
             {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
+              //Guest Mod
+              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
             }
 
           else{

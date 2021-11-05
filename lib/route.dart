@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bike_app/main.dart';
 import 'package:foreground_service/foreground_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
@@ -58,7 +59,15 @@ class _RouteRecording extends State {
       Text("Record your Route"),
       IconButton(onPressed: () {showAlertDialogNoButton(context, "Help", "");}, icon: Icon(Icons.help_outline))
     ],),
-      leading: IconButton(onPressed: () {if(!positionfound){postimer.cancel(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));} else {confirmRoute();}}, icon: Icon(Icons.arrow_back)),),
+      leading: IconButton(onPressed: () {
+        if(!positionfound) {
+          postimer.cancel();
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
+            return HomeScreen();
+            },), (route)=> false,);
+        } else {
+          confirmRoute();
+        }}, icon: Icon(Icons.arrow_back)),),
     body: Center(
       child: Column(children: [
         /*Text("When you hit Start, we will record your Route in Intervals"),
@@ -244,11 +253,13 @@ class _RouteRecording extends State {
 
   void initMap() async {
     await functions.determinePosition();
-    startForegroundService();
     postimer = Timer.periodic(Duration(seconds: 1), (Timer t) async
     {
       getPosition();
     });
+    if(!guestLogin) {
+      startForegroundService();
+    }
   }
 
   void calculateDistanceMeter()
@@ -286,13 +297,15 @@ class _RouteRecording extends State {
             try{
               rectimer.cancel();
             } catch (error) {}
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
+              return HomeScreen();
+            },), (route)=> false,);
           }
         else
           {
             ScaffoldMessenger.of(context).showSnackBar(submitErrSnackbar);
+            storage.write(key: "lastRoute", value: distanceInKM.toString());
           }
-
         },
     );
     Widget button_2 = TextButton(
@@ -304,7 +317,10 @@ class _RouteRecording extends State {
           rectimer.cancel();
         }
         catch (error) {}
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
+           return HomeScreen();
+           },), (route)=> false,);
       },
     );
     Widget button_3 = TextButton(

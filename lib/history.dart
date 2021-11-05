@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bike_app/functions.dart';
+import 'package:bike_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,7 +28,12 @@ class _HistoryScreen extends State
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text("Your last routes"),),
       body: SingleChildScrollView(child: Center(
-        child: Column(children: [
+        child: guestLogin?
+        Column(children: [
+          Padding(padding: EdgeInsets.all(10), child: Text("You are Guest", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600), textAlign: TextAlign.center,),),
+          Text("You need to be logged in to see your History.", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,)
+        ],):
+        Column(children: [
           Padding(padding: EdgeInsets.only(top: 15), child: Text("Your History", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),),
           ListTile(title: Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),), trailing: Text("Distance in Km", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),),
           FutureBuilder(future: historyFuture, builder: (context, AsyncSnapshot snapshot) {
