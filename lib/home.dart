@@ -148,123 +148,108 @@ class _HomeScreen extends State{
                 //Tiles
                 GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                    child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                        Text("Your Score:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
-                        Spacer(),
-                        Text("$score km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                        Spacer(),
-                      ],),),),
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
-                    child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                      child: Column(children: [
-                        Text("You saved:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
-                        Spacer(),
-                        Text("${co2.toStringAsFixed(3)} kg CO2", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                        Spacer(),
-                      ],),),),
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                    child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                      child: Column(children: [
-                        Text("Your Rank:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
-                        Spacer(),
-                        Text("#$yourRank", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                        Spacer(),
-                      ],),),),
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
-                      child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                        child: Column(children: [
-                          Text("Team Rank:", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
-                          Spacer(),
-                          Text(team? "#$teamRank":"No Team", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                          Spacer(),
-                        ],),),),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
+                      child: homeScreenCard(text1: "Your Score:", text2: "$score km"),),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
+                      child: homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2")
+                    ),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
+                      child: homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",)
+                    ),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
+                      child: homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team"),
+                    ),
                     // Your History
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
-                      child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                        child: Column(children: [
-                          Text("History", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
-                          Spacer(),
-                          FutureBuilder(future: historyFuture, builder: (context, snapshot) {
-                            if(!snapshot.hasData) {
-                              return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),));
-                            } else {
-                              return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                                Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                                ],);
-                            }
-                          }),
-
-                          //Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][1]))} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
+                      child: Container(
+                        margin: EdgeInsets.all(5),
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                            boxShadow: [BoxShadow(
+                                color: Colors.black12,
+                                spreadRadius: 3,
+                                blurRadius: 20,
+                                offset: Offset(0,3))
+                            ]
+                        ),
+                        child: Column(
+                          children: [
+                            Text("History", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
+                            Spacer(),
+                            FutureBuilder(
+                                future: historyFuture,
+                                builder: (context, snapshot) {
+                                  if(!snapshot.hasData) {
+                                    return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),));
+                                  } else {
+                                    return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                      Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                      ],);
+                                  }
+                            }),
                           Spacer(),
                       ],),),),
-                    InkWell(onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen()));},
-                      child: Container(margin: EdgeInsets.all(5), padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                        child: Column(children: [
-                          Text("", style: TextStyle(fontSize: 18,), textAlign: TextAlign.center,),
-                          Spacer(),
-                          Text("Achievements", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                          Spacer(),
-                      ],),),),
+                    InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen()));},
+                      child: homeScreenCard(text1:"", text2: "Achievements", fontsize: 18)
+                      ),
                   ],),
 
                 //Community History
-                Container(padding: EdgeInsets.all(10), margin: EdgeInsets.all(25),  width: MediaQuery.of(context).size.width*80,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 20, offset: Offset(0,3))]),
-                    child: Column(children: [
-                      Padding(padding: EdgeInsets.only(top: 10), child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
-                      FutureBuilder(future: communityRoutesFuture, builder: (context, AsyncSnapshot snapshot) {
-                        if(!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          return ListView.builder(physics: NeverScrollableScrollPhysics(), shrinkWrap:true, itemCount: 10, itemBuilder: (BuildContext context, int index)
-                          {
-                            return ListTile(
-                              leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}"),
-                              title:Text("${communityRoutes[index][0]}"),
-                              trailing: Text("${communityRoutes[index][1]}"),
-                            );
-                          });
-                        }
-                      }),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.all(25),
+                    width: MediaQuery.of(context).size.width*80,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: [BoxShadow(
+                            color: Colors.black12,
+                            spreadRadius: 3,
+                            blurRadius: 20,
+                            offset: Offset(0,3)
+                        )]
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
+                        FutureBuilder(
+                            future: communityRoutesFuture,
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if(!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else {
+                                return ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap:true,
+                                    itemCount: 10,
+                                    itemBuilder: (BuildContext context, int index)
+                                {
+                                  return ListTile(
+                                    leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}"),
+                                    title:Text("${communityRoutes[index][0]}"),
+                                    trailing: Text("${communityRoutes[index][1]}"),
+                                  );
+                                });
+                              }
+                            }
+                        ),
                     ],)
                 ),
                 Container(height: 75,),
-                //News Channel
-                /*Container(padding: EdgeInsets.all(10), margin: EdgeInsets.only(top: 0, left: 25, bottom: 25, right: 25),  width: MediaQuery.of(context).size.width*80,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,3))]),
-                    child: Column(children: [
-                      Padding(padding: EdgeInsets.only(top: 10), child: Text("News", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
-                      FutureBuilder(future: scoreboardFuture, builder: (context, AsyncSnapshot snapshot) {
-                        if(!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          return ListView.builder(physics: NeverScrollableScrollPhysics(), shrinkWrap:true, itemCount: 1, itemBuilder: (BuildContext context, int index)
-                          {
-                            return ListTile(
-                              title:Text("Hallo hier was neues"),
-                              subtitle: Text("test2 bla bla blub"),
-                            );
-                          });
-                        }
-                      }),
-                    ],)
-                ),*/
               ],),),
             ],)
           ,),
-
-        /*footer: Container(padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, spreadRadius: 3, blurRadius: 5, offset: Offset(0,-3))]),
-          child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),),
-        ),*/
       ),
     bottomSheet: Container(width: MediaQuery.of(context).size.width, child: Padding(padding: EdgeInsets.only(top: 5, right: 15, bottom: 5, left: 15), child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),), decoration: BoxDecoration(boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,spreadRadius: 0,color: Colors.grey)], color: Colors.white, borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10))),));
   }
@@ -360,4 +345,39 @@ class _HomeScreen extends State{
       }
   }
 
+}
+
+class homeScreenCard extends StatelessWidget {
+  String text1;
+  String text2;
+  double fontsize;
+
+  homeScreenCard({required this.text1, required this.text2, this.fontsize:20});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: [BoxShadow(
+                color: Colors.black12,
+                spreadRadius: 3,
+                blurRadius: 20,
+                offset: Offset(0,3))
+            ]
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(text1, style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
+            Spacer(),
+            Text(text2, style: TextStyle(fontSize: this.fontsize, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Spacer(),
+          ],
+        ),
+      );
+  }
 }
