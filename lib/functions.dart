@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,6 +40,7 @@ class Functions {
     var map = new Map<String, String>();
     map['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
     final response = await http.post(Uri.parse(server+"/token/auth"),headers: map);
+    print("getAuthTest");
     print(response.body);
     return response;
   }
@@ -254,10 +257,12 @@ class Functions {
     try {
       var access_token = await readAccessTokenFromStorage();
       var refresh_token = await readRefreshTokenFromStorage();
+      print("Done Reading Tokens");
       var response = await getRefreshToken(access_token, refresh_token);
       Map<String, dynamic> resp = json.decode(response.body);
       access_token = resp['access_token'];
       refresh_token = resp['refresh_token'];
+      print("write Tokens to storage");
       storage.write(key: "access_token", value: access_token);
       storage.write(key: "refresh_token", value: refresh_token);
 
@@ -373,6 +378,21 @@ class Functions {
     heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;*/
     final response = await http.post(Uri.parse(server+"/score/communityroutes"));
     //print(response.body);
+    return response;
+  }
+
+  Future uploadProfileImage(image) async {
+    var access_token = await readAccessTokenFromStorage();
+    var refresh_token = await readRefreshTokenFromStorage();
+    //var heads = new Map<String, String>();
+    var heads = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
+    var uri = Uri.parse(server+"/user/uploadProfileImage");
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['userID'] = "0"
+      ..headers['Cookie'] = heads
+      ..files.add(http.MultipartFile('image',image.readAsBytes().asStream(), image.size, filename: "photo.jpg"));
+    var response = await request.send();
+    print(response);
     return response;
   }
 }

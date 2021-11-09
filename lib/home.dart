@@ -20,6 +20,7 @@ import 'leaderboard.dart';
 import 'achievement.dart';
 import 'change_password.dart';
 import 'co2.dart';
+import 'profile.dart';
 
 //Must till publish
 //TODO: CO2 Screen of Community
@@ -110,7 +111,16 @@ class _HomeScreen extends State{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("EcoTracker"), IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline))],) ),
+      appBar: AppBar(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("EcoTracker"),
+              Spacer(),
+              IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline)),
+              IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen()));}, icon: Icon(Icons.account_circle_rounded))
+            ],) ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
