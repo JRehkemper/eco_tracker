@@ -9,6 +9,8 @@ var tmp_user_password = "";
 var welcomeGuideShown = false;
 var guestLogin = false;
 var offline = false;
+var mainUsername = "";
+var mainUserID = "";
 
 void main() {
   runApp(MyApp());

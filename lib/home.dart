@@ -51,7 +51,7 @@ class _HomeScreen extends State{
   var yourRank = 0;
   var teamRank;
   var team = false;
-  var userID;
+  var userID = mainUserID;
   var teamID;
   var history;
   var co2 = 0.0;
@@ -64,6 +64,12 @@ class _HomeScreen extends State{
     communityRoutesFuture = createCommunityList();
     scoreboardFuture = createScoreboardList();
     if (!guestLogin) {
+      /*functions.readUserIDFromStorage().then((String result) {
+        setState(() {
+          userID = result;
+          print("set UserID");
+        });
+      });*/
       functions.getYourHistory().then((response) {
         if (response.statusCode != 200) {
           return;
@@ -73,7 +79,6 @@ class _HomeScreen extends State{
           history = resp;
           print(history);
           //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
-          //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
         });
       });
       historyFuture = createHistory();
@@ -82,7 +87,8 @@ class _HomeScreen extends State{
           username = result;
         });
       });
-      functions.getYourScore().then((response) {
+
+      functions.getYourScore(userID).then((response) {
         if (response.statusCode != 200) {
           return;
         }
@@ -118,7 +124,7 @@ class _HomeScreen extends State{
               Text("EcoTracker"),
               Spacer(),
               IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline)),
-              IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen()));}, icon: Icon(Icons.account_circle_rounded))
+              IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen(userID)));}, icon: Icon(Icons.account_circle_rounded))
             ],) ),
 
       drawer: Drawer(
@@ -272,11 +278,12 @@ class _HomeScreen extends State{
     });
     if(!guestLogin) {
       var username = await functions.readUsernameFromStorage();
+      mainUsername = username;
       for (int i = 0; i < scoreboard.length; i++) {
         if (scoreboard[i][0] == username) {
           setState(() {
             yourRank = i + 1;
-            userID = scoreboard[i][2];
+            //userID = scoreboard[i][2];
             teamID = scoreboard[i][3];
           });
         }

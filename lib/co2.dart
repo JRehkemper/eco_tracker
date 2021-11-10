@@ -72,23 +72,24 @@ class _CO2Screen extends State {
   }
 
   Future calculateNumbers() async {
-  var response = await functions.getYourScore();
-  if(response.statusCode != 200) {return;}
-  var resp = json.decode(response.body);
-  setState(() {
-  var tmpYourScore = (resp['totalDistance']*128.1/1000).toStringAsFixed(3);
-  yourScore = double.parse(tmpYourScore);
-  });
-  print("YourScore");
-  response = await functions.getCommunityScore();
-  if(response.statusCode != 200) {return;}
-  resp = json.decode(response.body);
-  setState(() {
-  var tmpCommunityScore = (resp['distance']*128.1/1000).toStringAsFixed(3);
-  communityScore = double.parse(tmpCommunityScore);
-  });
-  print("communityScore");
-  return null;
-}
+    var userID = functions.readUserIDFromStorage();
+    var response = await functions.getYourScore(userID);
+    if(response.statusCode != 200) {return;}
+    var resp = json.decode(response.body);
+    setState(() {
+    var tmpYourScore = (resp['totalDistance']*128.1/1000).toStringAsFixed(3);
+    yourScore = double.parse(tmpYourScore);
+    });
+    print("YourScore");
+    response = await functions.getCommunityScore();
+    if(response.statusCode != 200) {return;}
+    resp = json.decode(response.body);
+    setState(() {
+    var tmpCommunityScore = (resp['distance']*128.1/1000).toStringAsFixed(3);
+    communityScore = double.parse(tmpCommunityScore);
+    });
+    print("communityScore");
+    return null;
+  }
 
 }

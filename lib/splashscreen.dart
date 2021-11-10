@@ -5,6 +5,7 @@ import 'functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'main.dart';
 import 'home.dart';
 import 'login.dart';
 
@@ -27,6 +28,11 @@ class _SplashScreen extends State {
         {
           print("success");
           //showAlertDialog(context, response.body);
+          functions.readUserIDFromStorage().then((String result) {
+            setState(() {
+              mainUserID = result;
+            });
+          });
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         }
       else if (response.statusCode == 502)

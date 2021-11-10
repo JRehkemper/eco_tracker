@@ -48,8 +48,9 @@ class Functions {
   Future getRefreshToken(String access_token, String refresh_token) async {
     var map = new Map<String, String>();
     map['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/token/refresh"),headers: map).timeout(Duration(seconds: 1),
+    final response = await http.post(Uri.parse(server+"/token/refresh"),headers: map).timeout(Duration(seconds: 3),
       onTimeout: () {
+        print("getRefreshToken Timeout");
         return http.Response('Error', 502);
       });
     print(response.body);
@@ -187,12 +188,17 @@ class Functions {
     return response;
   }
 
-  Future getYourScore() async {
+  Future getYourScore(userID) async {
+    print("UserID");
+    print(userID);
     var access_token = await readAccessTokenFromStorage();
     var refresh_token = await readRefreshTokenFromStorage();
     var heads = new Map<String, String>();
+    var map = new Map<String, dynamic>();
+    map['userID'] = userID;
     heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/route/yourscore"), headers: heads);
+    final response = await http.post(Uri.parse(server+"/route/yourscore"), headers: heads, body: map);
+    print(response.body);
     return response;
   }
 
@@ -259,6 +265,7 @@ class Functions {
       var refresh_token = await readRefreshTokenFromStorage();
       print("Done Reading Tokens");
       var response = await getRefreshToken(access_token, refresh_token);
+      print(response.body);
       Map<String, dynamic> resp = json.decode(response.body);
       access_token = resp['access_token'];
       refresh_token = resp['refresh_token'];
@@ -274,7 +281,7 @@ class Functions {
     catch (error)
     {
       print(error);
-      return null;
+      return http.Response('Error', 403);
     }
   }
 
@@ -387,12 +394,28 @@ class Functions {
     //var heads = new Map<String, String>();
     var heads = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
     var uri = Uri.parse(server+"/user/uploadProfileImage");
+    var userID = await readUserIDFromStorage();
     var request = http.MultipartRequest('POST', uri)
-      ..fields['userID'] = "0"
+      ..fields['userID'] = userID
       ..headers['Cookie'] = heads
-      ..files.add(http.MultipartFile('image',image.readAsBytes().asStream(), image.size, filename: "photo.jpg"));
+      ..files.add(http.MultipartFile('image',image.readAsBytes().asStream(), image.readAsBytesSync().lengthInBytes, filename: "profilepicture"+userID+".jpg"));
     var response = await request.send();
-    print(response);
+    //print(response);
+    return response;
+  }
+
+  Future getProfilePicture(userID) async {
+    var map = new Map<String, dynamic>();
+    map['UserID'] = userID;
+    final response = await http.post(Uri.parse(server+"/user/getProfilePicture"), body: map);
+    //print(response.body);
+    return response;
+  }
+
+  Future getTeamID(userID) async {
+    print("UserID "+userID);
+    final response = await http.post(Uri.parse(server+"/score/getYourTeam/"+userID));
+    print(response.body);
     return response;
   }
 }

@@ -21,7 +21,8 @@ class _TeamsScreen extends State {
   void initState() {
     super.initState();
     teamslistFuture = createTeamsList();
-    functions.getYourScore().then((response) {
+    var userID = functions.readUserIDFromStorage();
+    functions.getYourScore(userID).then((response) {
       if (response.statusCode != 200) {
         return;
       }
