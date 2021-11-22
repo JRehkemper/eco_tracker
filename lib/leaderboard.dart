@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:bike_app/functions.dart';
 import 'package:flutter/material.dart';
 
+import 'profile.dart';
+
 class LeaderBoard extends StatefulWidget
 {
   @override
@@ -38,11 +40,13 @@ class _LeaderBoard extends State
                 {
                   return ListView.builder(shrinkWrap:true, itemCount: leaderboard.length, itemBuilder: (BuildContext context, int index)
                   {
-                    return ListTile(
-                      leading: (Text("${index + 1}.")),
-                      title:Text("${leaderboard[index][0]}", style: TextStyle(fontSize: 14),),
-                      trailing: Text((leaderboard[index][1] == null)?"0.000":"${leaderboard[index][1]}"),
-                    );
+                    return InkWell(
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen(leaderboard[index][2])));},
+                      child: ListTile(
+                        leading: (Text("${index + 1}.")),
+                        title:Text("${leaderboard[index][0]}", style: TextStyle(fontSize: 14),),
+                        trailing: Text((leaderboard[index][1] == null)?"0.000":"${leaderboard[index][1]}"),
+                    ),);
                   });
                 }
               }),

@@ -6,7 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AchievementScreen extends StatefulWidget {
-  _AchievementScreen createState() => _AchievementScreen();
+  final userID;
+  AchievementScreen(this.userID);
+
+  @override
+  _AchievementScreen createState() => _AchievementScreen(this.userID);
 }
 
 class _AchievementScreen extends State {
@@ -15,13 +19,16 @@ class _AchievementScreen extends State {
   late Future<List> achievments_future;
   var achievments = [];
   var achievmentlist;
+  var userID;
   /*ValueNotifier<double> vscore = ValueNotifier(0.0);
   var score = 0.0;*/
+
+  _AchievementScreen(this.userID);
 
   @override
   void initState() {
     if(!guestLogin) {
-      achievments_future = getYourAchievments();
+
       getYourAchievments().then((response) {
         var arr = [];
         int i = 0;
@@ -37,6 +44,7 @@ class _AchievementScreen extends State {
         achievmentlist = response;
         //print("achievmentsList $achievmentlist");
       });
+      achievments_future = getYourAchievments();
     }
     else {
       achievments_future = guestFuture();
@@ -136,11 +144,12 @@ class _AchievementScreen extends State {
   }
 
   Future<List> getYourAchievments() async {
-    var response = await functions.getYourAchievments();
+    var response = await functions.getYourAchievments(userID);
     var resp = json.decode(response.body);
     setState(() {
       achievments = resp;
     });
+    await Future.delayed(Duration(milliseconds: 100));
     return resp;
   }
 
@@ -157,7 +166,6 @@ class _AchievementScreen extends State {
     //print("guestHistory()");
     return await new Future(() => [["1970-01-01T00:00:00.000Z","1","2"]]);
   }
-
 }
 
 class achievementGridCard extends StatelessWidget{

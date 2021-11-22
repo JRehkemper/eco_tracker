@@ -41,7 +41,7 @@ class _ResetPasswordScreen extends State {
                   Container(padding: EdgeInsets.all(15), margin: EdgeInsets.only(top: 140),
                     child: Text("Enter your Email Address", style: TextStyle(fontSize: 25,), textAlign: TextAlign.center,),),
                   Padding(padding: EdgeInsets.only(top: 15, left: 35, bottom: 15, right: 35),
-                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Email or Username",), controller: usernameCon,),),
+                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Email",), controller: usernameCon,),),
                   Padding(padding: EdgeInsets.all(0),
                       child: Text(resetDone? "We have sent you an Email with a Link to reset your password." : "")),
                   Padding(padding: EdgeInsets.all(0),

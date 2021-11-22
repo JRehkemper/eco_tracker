@@ -57,6 +57,7 @@ class _HomeScreen extends State{
   var co2 = 0.0;
   late Future<List> historyFuture;
   var helpSnackBar = SnackBar(content: Text("Tap on the Tiles to get to the other Screens."));
+  var achievementNumber = 0;
 
   @override
   void initState() {
@@ -110,6 +111,12 @@ class _HomeScreen extends State{
         yourRank = 0;
       });
     }
+    functions.getNumberOfAchievments(userID).then((response) {
+      var resp = json.decode(response.body);
+      setState(() {
+        achievementNumber = resp['numberOfAchievements'];
+      });
+    });
     checkSavedRoutes();
     super.initState();
   }
@@ -183,7 +190,7 @@ class _HomeScreen extends State{
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
                       child: Container(
-                        margin: EdgeInsets.all(5),
+                        margin: EdgeInsets.only(top: 20),
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -213,8 +220,8 @@ class _HomeScreen extends State{
                           Spacer(),
                       ],),),),
                     InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen()));},
-                      child: homeScreenCard(text1:"", text2: "Achievements", fontsize: 18)
+                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
+                      child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18)
                       ),
                   ],),
 
@@ -374,7 +381,7 @@ class homeScreenCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(5),
+        margin: EdgeInsets.only(top: 20),
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -389,9 +396,9 @@ class homeScreenCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(text1, style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
+            Text(text1, style: TextStyle(fontSize: this.fontsize,), textAlign: TextAlign.center,),
             Spacer(),
-            Text(text2, style: TextStyle(fontSize: this.fontsize, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text(text2, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
             Spacer(),
           ],
         ),

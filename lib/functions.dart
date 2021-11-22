@@ -195,7 +195,7 @@ class Functions {
     var refresh_token = await readRefreshTokenFromStorage();
     var heads = new Map<String, String>();
     var map = new Map<String, dynamic>();
-    map['userID'] = userID;
+    map['userID'] = userID.toString();
     heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
     final response = await http.post(Uri.parse(server+"/route/yourscore"), headers: heads, body: map);
     print(response.body);
@@ -368,12 +368,12 @@ class Functions {
     return response;
   }
 
-  Future getYourAchievments() async {
-    var access_token = await readAccessTokenFromStorage();
-    var refresh_token = await readRefreshTokenFromStorage();
-    var heads = new Map<String, String>();
-    heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/score/yourachievments"), headers: heads);
+  Future getYourAchievments(userID) async {
+    //var access_token = await readAccessTokenFromStorage();
+    //var refresh_token = await readRefreshTokenFromStorage();
+    //var heads = new Map<String, String>();
+    //heads['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
+    final response = await http.post(Uri.parse(server+"/score/yourachievments/"+userID.toString()), );
     //print(response.body);
     return response;
   }
@@ -413,9 +413,14 @@ class Functions {
   }
 
   Future getTeamID(userID) async {
-    print("UserID "+userID);
-    final response = await http.post(Uri.parse(server+"/score/getYourTeam/"+userID));
-    print(response.body);
+    print("UserID "+userID.toString());
+    final response = await http.post(Uri.parse(server+"/score/getYourTeam/"+userID.toString()));
+    //print(response.body);
+    return response;
+  }
+
+  Future getNumberOfAchievments(userID) async {
+    final response = await http.post(Uri.parse(server+"/score/numberofachievements/"+userID.toString()));
     return response;
   }
 }

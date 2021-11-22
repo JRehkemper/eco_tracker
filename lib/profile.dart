@@ -6,13 +6,14 @@ import 'package:image_picker/image_picker.dart';
 import 'functions.dart';
 import 'main.dart';
 import 'home.dart';
+import 'achievement.dart';
 
 class ProfileScreen extends StatefulWidget {
   final userID;
   ProfileScreen(this.userID);
 
   @override
-  _ProfileScreen createState() => _ProfileScreen(userID);
+  _ProfileScreen createState() => _ProfileScreen(this.userID);
 }
 
 class _ProfileScreen extends State {
@@ -30,11 +31,15 @@ class _ProfileScreen extends State {
   var team = false;
   var teamRank;
   late Future pageFuture;
+  var username;
+  var myuser = false;
+  var achievementNumber = 0;
 
   _ProfileScreen(this.userID);
 
   @override
   void initState() {
+    print("UserID "+this.userID.toString());
     this.pageFuture = initPage();
     super.initState();
     print("pageFuture Filled");
@@ -68,14 +73,26 @@ class _ProfileScreen extends State {
       var resp = json.decode(response.body);
       setState(() {
         teamID = resp['TeamID'].toString();
+        username = resp['username'].toString();
+        print(username);
         responseFuture = response;
         team = true;
       });
+      if(mainUsername == username) {
+        myuser = true;
+      }
       print("teamID "+teamID);
       print("Done initPage");
 
     });
-    await Future.delayed(Duration(seconds: 1));
+    createScoreboardList();
+    functions.getNumberOfAchievments(userID).then((response) {
+      var resp = json.decode(response.body);
+      setState(() {
+        achievementNumber = resp['numberOfAchievements'];
+      });
+    });
+    await Future.delayed(Duration(milliseconds: 300));
     print("return");
     return responseFuture;
   }
@@ -96,33 +113,14 @@ class _ProfileScreen extends State {
     setState(() {
       scoreboard = resp;
     });
-    if(!guestLogin) {
-      var username = await functions.readUsernameFromStorage();
-      mainUsername = username;
-      for (int i = 0; i < scoreboard.length; i++) {
-        if (scoreboard[i][0] == username) {
-          setState(() {
-            yourRank = i + 1;
-            userID = scoreboard[i][2];
-            teamID = scoreboard[i][3];
-          });
-        }
-      }
-      storage.write(key: "userID", value: userID.toString());
-    }
-    response = await functions.getTeamsList();
-    resp = json.decode(response.body);
-    print(resp);
-    for(int i = 0; i < resp.length; i++)
-    {
-      if(resp[i][0] == teamID)
-      {
+    for (int i = 0; i < scoreboard.length; i++) {
+      if (scoreboard[i][2] == userID) {
         setState(() {
-          teamRank = i + 1;
-          team = true;
+          yourRank = i + 1;
         });
       }
     }
+    print("Scoreboard done");
     return resp;
   }
 
@@ -140,30 +138,38 @@ class _ProfileScreen extends State {
             child: SingleChildScrollView(
                 child: Column(children: [
                   Stack(children: [
-                    Image.network(server+"/user/getProfilePicture/67"),
+                    Image.network(server+"/user/getProfilePicture/"+userID.toString(), width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
                     Positioned.fill(
                       child: Align(
                         alignment: Alignment.bottomRight,
-                        child: IconButton(
+                        child: myuser? IconButton(
                             onPressed: ()  {
                               getImage();
                             },
-                            icon: Icon(Icons.edit)),
+                            icon: Icon(Icons.edit)):
+                        SizedBox.shrink(),
                       ),
                     ),
                   ],),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Text(mainUsername, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(username, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
                   ),
-                  GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
-                      children: [
-                        homeScreenCard(text1: "Your Score:", text2: "$score km"),
-                        homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2"),
-                        homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",),
-                        homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team"),
-                      ]
-                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 15),
+                    child: GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
+                        children: [
+                          homeScreenCard(text1: "Your Score:", text2: "$score km"),
+                          homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2"),
+                          homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",),
+                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team"),
+                          InkWell(
+                            onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
+                            child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18,),
+                          ),
+                        ]
+                    ),
+                  )
                   //Spacer(),
                 ],)
             ),
