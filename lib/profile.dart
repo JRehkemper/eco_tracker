@@ -114,7 +114,7 @@ class _ProfileScreen extends State {
       scoreboard = resp;
     });
     for (int i = 0; i < scoreboard.length; i++) {
-      if (scoreboard[i][2] == userID) {
+      if (scoreboard[i][2].toString() == userID.toString()) {
         setState(() {
           yourRank = i + 1;
         });
@@ -126,8 +126,22 @@ class _ProfileScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Profile"),),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(/*title: Text("Profile"),*/),
       body: FutureBuilder(
         future: pageFuture,
         builder: (context, snapshot) {
@@ -137,20 +151,22 @@ class _ProfileScreen extends State {
           return SafeArea(
             child: SingleChildScrollView(
                 child: Column(children: [
-                  Stack(children: [
-                    Image.network(server+"/user/getProfilePicture/"+userID.toString(), width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: myuser? IconButton(
-                            onPressed: ()  {
-                              getImage();
-                            },
-                            icon: Icon(Icons.edit)):
-                        SizedBox.shrink(),
-                      ),
-                    ),
-                  ],),
+                  Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Stack(children: [
+                        Image.network(server+"/user/getProfilePicture/"+userID.toString(), width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: myuser? IconButton(
+                                onPressed: ()  {
+                                  getImage();
+                                },
+                                icon: Icon(Icons.edit)):
+                            SizedBox.shrink(),
+                          ),
+                        ),
+                      ],),),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                     child: Text(username, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
@@ -159,58 +175,24 @@ class _ProfileScreen extends State {
                     margin: EdgeInsets.only(bottom: 15),
                     child: GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
                         children: [
-                          homeScreenCard(text1: "Your Score:", text2: "$score km"),
-                          homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2"),
-                          homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",),
-                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team"),
+                          homeScreenCard(text1: "Your Score:", text2: "$score km", icon: Icons.leaderboard),
+                          homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", icon: Icons.score),
+                          homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", icon: Icons.query_builder),
+                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team", icon: Icons.group),
                           InkWell(
                             onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
-                            child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18,),
+                            child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18, icon: Icons.check_box),
                           ),
                         ]
                     ),
                   )
                   //Spacer(),
-                ],)
+              ],)
             ),
           );
         }
       )
-
-      );
-      /*CustomScrollView(
-        slivers: [ SliverFillRemaining(
-            hasScrollBody: true,
-            child: Column(children: [
-              Stack(children: [
-                Image.network(server+"/user/getProfilePicture/67"),
-                Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      onPressed: ()  {
-                        getImage();
-                      },
-                      icon: Icon(Icons.edit)),
-                  ),
-                ),
-              ],),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text(mainUsername, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
-              ),
-              GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  homeScreenCard(text1: "Your Score:", text2: "$score km"),
-                  homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2"),
-                  homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",),
-                  homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team"),
-                ]
-              ),
-              Spacer(),
-          ],)
-        ),]
-      )*/
+    ),
+    );
   }
-
 }

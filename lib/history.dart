@@ -26,7 +26,22 @@ class _HistoryScreen extends State
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Your last routes"),),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(/*title: Text("Your last routes")*/),
       body: SingleChildScrollView(child: Center(
         child: guestLogin?
         Column(children: [
@@ -54,7 +69,8 @@ class _HistoryScreen extends State
         }),
         ],)
       )
-    ),);
+    ),),
+    );
   }
 
   Future<List> getYourHistory() async {

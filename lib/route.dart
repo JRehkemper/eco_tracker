@@ -55,13 +55,30 @@ class _RouteRecording extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child:Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(title: Row( mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Text("Record your Route"),
       IconButton(onPressed: () {showAlertDialogNoButton(context, "Help", "");}, icon: Icon(Icons.help_outline))
     ],),
       leading: IconButton(onPressed: () {
         if(!positionfound) {
+          stopRecording();
           postimer.cancel();
+
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
             return HomeScreen();
             },), (route)=> false,);
@@ -151,6 +168,7 @@ class _RouteRecording extends State {
               child: FloatingActionButton(onPressed: () {confirmRoute();}, child: Icon(Icons.check),),),
           ],),
       ],),),
+    )
     );
   }
 

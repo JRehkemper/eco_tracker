@@ -54,8 +54,22 @@ class _AchievementScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("Achievements")),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(/*title: Text("Achievements")*/),
         body: SafeArea(
             child: SingleChildScrollView(
               child: guestLogin?
@@ -140,6 +154,7 @@ class _AchievementScreen extends State {
                 ),
             )
         )
+    ),
     );
   }
 
@@ -149,7 +164,7 @@ class _AchievementScreen extends State {
     setState(() {
       achievments = resp;
     });
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(Duration(milliseconds: 500));
     return resp;
   }
 
@@ -182,7 +197,7 @@ class achievementGridCard extends StatelessWidget{
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: (this.granted) ? Colors.white : Colors.grey,
+          color: (this.granted) ? Colors.white : Color(0xffaaaaaa),
           boxShadow: [
             BoxShadow(color: Colors.black12,
                 spreadRadius: 3,
@@ -191,11 +206,11 @@ class achievementGridCard extends StatelessWidget{
           ]),
       child: Column(
         children: [
-          Text("${this.name}", style: TextStyle(fontSize: 18,),
+          Text("${this.name}", style: TextStyle(fontSize: 18, color: Colors.black, shadows: []),
             textAlign: TextAlign.center,),
           Spacer(),
           Text("${this.desription}",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),
             textAlign: TextAlign.center,),
           Spacer(),
         ],

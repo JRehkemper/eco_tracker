@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bike_app/resetpassword.dart';
 import 'package:footer/footer.dart';
 import 'package:footer/footer_view.dart';
 import 'package:bike_app/teams.dart';
@@ -10,6 +11,7 @@ import 'route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
 
 import 'main.dart';
 import 'functions.dart';
@@ -123,7 +125,21 @@ class _HomeScreen extends State{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,23 +151,26 @@ class _HomeScreen extends State{
             ],) ),
 
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(child: Column(children:
-              [
-                Text("Settings",style: TextStyle(fontSize: 28),),
-              ],)),
-            ListTile(title: Text("Show Welcome Guide"), onTap: () {functions.showWelcomeGuide(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => WelcomeGuide()));}),
-            Divider(),
-            ListTile(title: Text("Change your Password"),onTap: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));},),            Divider(),
-            ListTile(title: Text("Logout"),onTap: () {storage.deleteAll(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));},),
-            Divider(),
-            //ListTile(title: Text("Debugging (For Development only)"), onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EmailActivationScreen()));}),
+        child: Container(
+          color: gradientend,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(child: Column(children:
+                [
+                  Text("Settings",style: TextStyle(fontSize: 28),),
+                ],)),
+              ListTile(title: Text("Show Welcome Guide"), onTap: () {functions.showWelcomeGuide(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => WelcomeGuide()));}),
+              Divider(),
+              ListTile(title: Text("Change your Password"),onTap: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => ChangePasswordScreen()));},),
+              Divider(),
+              ListTile(title: Text("Logout"),onTap: () {storage.deleteAll(); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));},),
+              Divider(),
+              //ListTile(title: Text("Debugging (For Development only)"), onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => WelcomeGuide()));}),
 
-            //ListTile(title: Text("Delete your Account"),onTap: () {deleteAccount();},),
-            //Divider()
-          ],
+              //ListTile(title: Text("Delete your Account"),onTap: () {deleteAccount();},),
+            ],
+          ),
         ),
       ),
       //Body
@@ -159,13 +178,11 @@ class _HomeScreen extends State{
           SingleChildScrollView(child: Stack(children: [
               /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
                  width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),*/
-              Container(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors:[Color(0xff67bc69), Color(0xff4CAF50)])), child:
               Column( children: [
                 //Hello
                 //Container(child: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), alignment: Alignment.centerLeft,),
                 Container(margin: EdgeInsets.only(top: 20, left: 10, bottom: 0, right: 10), padding: EdgeInsets.all(20), alignment: Alignment.topLeft,
-                  child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, color: Colors.white, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),),
-                //Container(height: MediaQuery.of(context).size.height*0.05,),
+                  child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40),),),
                 Container(child: offline?Text("Our Servers are currently down for maintenance. If you record a route it will be submitted, as soon as the Servers are back online."):Text("")),
                 Container(child: guestLogin?ElevatedButton(onPressed: (()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()))), child: Text("Go to Login")):Text(""), margin: EdgeInsets.only(bottom: 30),),
                 //Tiles
@@ -173,18 +190,18 @@ class _HomeScreen extends State{
                   children: [
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                      child: homeScreenCard(text1: "Your Score:", text2: "$score km"),),
+                      child: homeScreenCard(text1: "Your Score:", text2: "$score km", icon: Icons.leaderboard),),
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
-                      child: homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2")
+                      child: homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", icon: Icons.score)
                     ),
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                      child: homeScreenCard(text1: "Your Rank:", text2: "#$yourRank",)
+                      child: homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", icon: Icons.leaderboard)
                     ),
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
-                      child: homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team"),
+                      child: homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team", icon: Icons.group),
                     ),
                     // Your History
                     InkWell(
@@ -204,24 +221,25 @@ class _HomeScreen extends State{
                         ),
                         child: Column(
                           children: [
-                            Text("History", style: TextStyle(fontSize: 20,), textAlign: TextAlign.center,),
+                            Text("History", style: TextStyle(fontSize: 20, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
                             Spacer(),
                             FutureBuilder(
                                 future: historyFuture,
                                 builder: (context, snapshot) {
                                   if(!snapshot.hasData) {
-                                    return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),));
+                                    return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),));
                                   } else {
-                                    return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
-                                      Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                                    return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
+                                      Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
                                       ],);
                                   }
                             }),
-                          Spacer(),
+                            Spacer(),
+                            Icon(Icons.calendar_today),
                       ],),),),
                     InkWell(
                       onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
-                      child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18)
+                      child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18, icon: Icons.check_box)
                       ),
                   ],),
 
@@ -244,7 +262,7 @@ class _HomeScreen extends State{
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: 10),
-                          child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),),
+                          child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, color: Colors.black, shadows: []),),),
                         FutureBuilder(
                             future: communityRoutesFuture,
                             builder: (context, AsyncSnapshot snapshot) {
@@ -259,9 +277,9 @@ class _HomeScreen extends State{
                                     itemBuilder: (BuildContext context, int index)
                                 {
                                   return ListTile(
-                                    leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}"),
-                                    title:Text("${communityRoutes[index][0]}"),
-                                    trailing: Text("${communityRoutes[index][1]}"),
+                                    leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}", style: TextStyle(color: Colors.black, shadows: []),),
+                                    title:Text("${communityRoutes[index][0]}", style: TextStyle(color: Colors.black, shadows: [])),
+                                    trailing: Text("${communityRoutes[index][1]}", style: TextStyle(color: Colors.black, shadows: [])),
                                   );
                                 });
                               }
@@ -270,11 +288,12 @@ class _HomeScreen extends State{
                     ],)
                 ),
                 Container(height: 75,),
-              ],),),
+              ],),
             ],)
           ,),
       ),
-    bottomSheet: Container(width: MediaQuery.of(context).size.width, child: Padding(padding: EdgeInsets.only(top: 5, right: 15, bottom: 5, left: 15), child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),), decoration: BoxDecoration(boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,spreadRadius: 0,color: Colors.grey)], color: Colors.white, borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10))),));
+    bottomSheet: Container(width: MediaQuery.of(context).size.width, child: Padding(padding: EdgeInsets.only(top: 5, right: 15, bottom: 5, left: 15), child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),), decoration: BoxDecoration(boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,spreadRadius: 0,color: Colors.grey)], color: Colors.white, borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10))),)
+    ),);
   }
 
   Future<List> createScoreboardList() async {
@@ -374,9 +393,10 @@ class _HomeScreen extends State{
 class homeScreenCard extends StatelessWidget {
   String text1;
   String text2;
+  IconData icon;
   double fontsize;
 
-  homeScreenCard({required this.text1, required this.text2, this.fontsize:20});
+  homeScreenCard({required this.text1, required this.text2, this.fontsize:20, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -396,9 +416,11 @@ class homeScreenCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(text1, style: TextStyle(fontSize: this.fontsize,), textAlign: TextAlign.center,),
+            Text(text1, style: TextStyle(fontSize: this.fontsize, shadows: [], color: Colors.black), textAlign: TextAlign.center,),
             Spacer(),
-            Text(text2, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+            Text(text2, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, shadows: [], color: Colors.black), textAlign: TextAlign.center),
+            Spacer(),
+            Icon(icon),
             Spacer(),
           ],
         ),

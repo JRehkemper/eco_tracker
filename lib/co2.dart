@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'functions.dart';
+import 'main.dart';
 
 class CO2Screen extends StatefulWidget {
   _CO2Screen createState() => _CO2Screen();
@@ -29,51 +30,67 @@ class _CO2Screen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Saved CO2")),
-      body: SingleChildScrollView(
-        child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 15),
-                Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
-                  child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      Text("The EcoTracer-Community saved", style: TextStyle(fontSize: 18),),
-                      Spacer(),
-                      Text("$communityScore Kg CO2", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                      Spacer(),
-                    ],
-                  )),
-                ),),
-                Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
-                  child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      Text("You saved", style: TextStyle(fontSize: 18),),
-                      Spacer(),
-                      Text("$yourScore Kg CO2", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                      Spacer(),
-                    ],
-                  )),
-                ),),
-                Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
-                  child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Spacer(),
-                      Text("You contributed", style: TextStyle(fontSize: 18),),
-                      Spacer(),
-                      Text("$yourPart%", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                      Spacer(),
-                    ],
-                  )
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomCenter,
+              colors: [
+                gradientstart,
+                gradientend,
+              ],
+              //stops: [0.0,1.0],
+              //tileMode: TileMode.clamp,
+            )
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(/*title: Text("Saved CO2")*/),
+          body: SingleChildScrollView(
+            child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 15),
+                    Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
+                      child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Text("The EcoTracer-Community saved", style: TextStyle(fontSize: 18, color: Colors.black, shadows: []),),
+                          Spacer(),
+                          Text("$communityScore Kg CO2", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),),
+                          Spacer(),
+                        ],
+                      )),
+                    ),),
+                    Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
+                      child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Text("You saved", style: TextStyle(fontSize: 18, color: Colors.black, shadows: []),),
+                          Spacer(),
+                          Text("$yourScore Kg CO2", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),),
+                          Spacer(),
+                        ],
+                      )),
+                    ),),
+                    Card(child: SizedBox(height: 100, width: MediaQuery.of(context).size.width*0.9,
+                      child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Text("You contributed", style: TextStyle(fontSize: 18, color: Colors.black, shadows: []),),
+                          Spacer(),
+                          Text("$yourPart%", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),),
+                          Spacer(),
+                        ],
+                      )
+                ),
+              ),),
+            ],)
             ),
-          ),),
-        ],)
-
-
-    ),),);
+          ),
+        )
+    );
   }
 
   Future calculateNumbers() async {

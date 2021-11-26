@@ -16,10 +16,24 @@ class _WelcomeGuide extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child:Scaffold(
+      backgroundColor: Colors.transparent,
       body:
-       Container(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors:[Color(0xff67bc69), Color(0xff4CAF50)])),
-          child:
+       //Container(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors:[Color(0xff67bc69), Color(0xff4CAF50)])),
+          //child:
           SingleChildScrollView(child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: SafeArea( child: Center(
@@ -62,16 +76,10 @@ class _WelcomeGuide extends State {
                     );
                   }).toList(),
                 ),
-
-
-
-
-
-
                 //Spacer(),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [Checkbox(value: guide, onChanged: (value) {setState(() {
+                /*Row(mainAxisAlignment: MainAxisAlignment.center, children: [Checkbox(value: guide, onChanged: (value) {setState(() {
                     guide = value!;
-                  });}),Text("Don't show this again", style: TextStyle(color: Colors.white,))],),
+                  });}),Text("Don't show this again", style: TextStyle(color: Colors.white,))],),*/
                 SizedBox(width: MediaQuery.of(context).size.width*0.8,
                   child: ElevatedButton(onPressed: () {welcomeGuideShown = true; functions.disableWelcomeGuid(guide); Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));}, child: Text("Get Started")),),
                 SizedBox(width: MediaQuery.of(context).size.width*0.8,

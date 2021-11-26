@@ -29,13 +29,27 @@ class _LoginScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text("Login or Register"),
         ),
         body: Stack(children: [
-          Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
-            width: MediaQuery.of(context).size.width,),
+          /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
+            width: MediaQuery.of(context).size.width,),*/
           SingleChildScrollView(child: ConstrainedBox(
             constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
               child: Center(
@@ -44,15 +58,15 @@ class _LoginScreen extends State {
                   Container(padding: EdgeInsets.all(15), margin: EdgeInsets.only(top: 140),
                     child: Text("Login", style: TextStyle(fontSize: 25),),),
                   Padding(padding: EdgeInsets.only(top: 15, left: 35, bottom: 15, right: 35),
-                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Email or Username",), controller: usernameCon,),),
+                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Email or Username", hintStyle: fonthint), controller: usernameCon,),),
                   Padding(padding: EdgeInsets.only(top: 15, left: 35, bottom: 15, right: 35),
-                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Password"), controller: passwordCon, obscureText: true, ),),
+                    child: TextField(decoration: InputDecoration(border: UnderlineInputBorder(), hintText: "Enter Password", hintStyle: fonthint), controller: passwordCon, obscureText: true, ),),
                   Padding(padding: EdgeInsets.all(0),
                       child: Text(loginFailed? "Wrong Username or Password." : "")),
                   Padding(padding: EdgeInsets.all(0),
                       child: Text(emailActivation? "Please Confirm your Email first." : "")),
                   Padding(padding: EdgeInsets.all(0),
-                    child: TextButton(child: Text("Forgot my password",style: TextStyle(color: Colors.black)), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));},),),
+                    child: TextButton(child: Text("Forgot my password", style: TextStyle(color: Colors.white,),), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));},),),
                   Padding(padding: EdgeInsets.all(0),
                       child: ElevatedButton(onPressed: () => loginProcedure(usernameCon.text, passwordCon.text, context), child: Text("Login",))),
                   //Spacer(),
@@ -65,6 +79,7 @@ class _LoginScreen extends State {
               ),)
           ),),
         ],),
+    )
   );
   }
   void loginProcedure(String username, String password, BuildContext context) async {
@@ -120,15 +135,30 @@ class _EmailActivationScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(/*title: Text("You have to Activate your Email")*/),
       body: SingleChildScrollView(child: ConstrainedBox(
     constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
     child: Stack(children: [
-        Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
-                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,),
+        /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/LoginBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.topCenter)),
+                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,),*/
         Center(child: Padding(padding: EdgeInsets.all(20),child: Column(children: [
           Spacer(),
-          Text("We have sent you an Email with an activation Link.\n"),
+          Text("We have sent you an EMail with an activation Link.\n"),
           Text("Please check your EMail Inbox (also the spam).\n"),
           Text("You need to activate your account before you can login.\n", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18), textAlign: TextAlign.center,),
           ElevatedButton(onPressed: () { continueLogin(); }, child: Text("Activation complete")),
@@ -136,7 +166,7 @@ class _EmailActivationScreen extends State {
         ]),
         ),
       )
-    ]),),),);
+    ]),),),));
   }
 
   void continueLogin() async {

@@ -2,6 +2,7 @@ import 'package:bike_app/functions.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
+import 'main.dart';
 
 class CreateTeamScreen extends StatefulWidget {
   _CreateTeamScreen createState() => _CreateTeamScreen();
@@ -13,7 +14,22 @@ class _CreateTeamScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Create a new Team")),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child:Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(title: Text("Create a new Team")),
       body: SingleChildScrollView(child: Center(child: Column(children: [
         Padding(padding: EdgeInsets.all(15),
           child: Text("You are about to create your own Team. In a Team you can work together to earn more Points and climb the leaderboard.",),),
@@ -23,7 +39,8 @@ class _CreateTeamScreen extends State {
           child: TextField(decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter Teamname",), controller: teamnameCon,),),
         Padding(padding: EdgeInsets.all(15),
           child: ElevatedButton(onPressed: () {createTeam();}, child: Text("Create"),),)
-    ],))),);
+    ],))),)
+    );
   }
 
   Future createTeam() async {

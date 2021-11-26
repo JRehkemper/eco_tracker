@@ -34,22 +34,37 @@ class _RegistrationScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("Registration"),),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(/*title: Text("Registration"),*/),
       body: SingleChildScrollView(child: Center(child: Column(children: [
         Padding(padding: EdgeInsets.all(15),
           child: Text("Register your Account")),
         Padding(padding: EdgeInsets.all(10),
-          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Email"), controller: emailCon,)),
+          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Email", hintStyle: fonthint), controller: emailCon,)),
         Padding(padding: EdgeInsets.only(bottom: 0),
           child: Text(emailTaken? "Email already taken" : ""),),
         Padding(padding: EdgeInsets.all(10),
-          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Displayname (visible to other Users)"), controller: userCon,)),
+          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Displayname (visible to other Users)", hintStyle: fonthint), controller: userCon,)),
         Padding(padding: EdgeInsets.all(10),
-          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Password"), controller: pass1Con, obscureText: true,)),
+          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Enter Password", hintStyle: fonthint), controller: pass1Con, obscureText: true,)),
         Padding(padding: EdgeInsets.only(bottom: 0),
           child: Text(usertaken? "Username already taken" : ""),),
         Padding(padding: EdgeInsets.all(10),
-          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Confirm Password"), controller: pass2Con, obscureText: true,)),
+          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Confirm Password", hintStyle: fonthint), controller: pass2Con, obscureText: true,)),
         Padding(padding: EdgeInsets.only(bottom: 20),
           child: Text(passwordCheck? "Passwords do not match" : ""),),
         ElevatedButton(onPressed: () => registrationProcedure(emailCon.text, userCon.text, pass1Con.text, pass2Con.text, context), child: Text("Continue")),
@@ -59,7 +74,8 @@ class _RegistrationScreen extends State {
 
       ],),
       )
-    ),);
+    ),)
+    );
   }
 
   void registrationProcedure(String email, String username, String password1, String password2, BuildContext context) async {

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'functions.dart';
 import 'home.dart';
+import 'main.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   _ChangePasswordScreen createState() => _ChangePasswordScreen();
@@ -22,7 +23,22 @@ class _ChangePasswordScreen extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("You have to Activate your Email"),),
+    return Container(
+        decoration: BoxDecoration(
+        gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomCenter,
+        colors: [
+        gradientstart,
+        gradientend,
+        ],
+        //stops: [0.0,1.0],
+        //tileMode: TileMode.clamp,
+    )
+    ),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(title: Text("You have to Activate your Email"),),
       body: SingleChildScrollView(child: Center(
           child: Column(
             children: [
@@ -43,6 +59,7 @@ class _ChangePasswordScreen extends State {
             ],
           )
       ),),
+    )
     );
   }
 
