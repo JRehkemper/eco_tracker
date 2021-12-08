@@ -13,3 +13,7 @@ EcoTracker is a Flutter App that I programmed on my own. The App depends on a Cl
 
 ### Contribution
 I'm am happy about every support. Weather you want to help with the development or just report a bug or a feature-request. You can simply open an issue right here on GitHub or send me an EMail to system@jrehkemper.de
+
+## Disclaimer
+I am not a professional Developer. This is a Project for fun and without commercial interrest.
+The App is currently only deployed to the PlayStore and not tested on other Plattforms than Android.
