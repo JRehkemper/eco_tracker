@@ -19,6 +19,30 @@ void topLevelTest() {
   //print(DateFormat('kk:mm:ss').format(now));
 }
 
+class RouteScreen extends StatefulWidget {
+  @override
+  _RouteScreen createState() => _RouteScreen();
+}
+
+class _RouteScreen extends State {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+        Text("Record your Route", style: TextStyle(fontSize: 40),),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Text("Click start and we will begin to record your distance. Every Kilometer will be added to your Score and the Score of your Team. You will also start to earn Achievements."),
+        ),
+        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start")),
+      ],),
+    );
+  }
+
+}
+
 class RouteRecording extends StatefulWidget {
   @override
   _RouteRecording createState() => _RouteRecording();

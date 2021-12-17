@@ -101,12 +101,37 @@ class _TeamsScreen extends State {
   }
 
   Future changeTeam(id) async {
-    var response = await functions.changeTeam(id.toString());
-    if(response.statusCode != 200) {
-      ScaffoldMessenger.of(context).showSnackBar(changeError);
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(changeSuccess);
+    showDialog(context: context, builder: (context) =>
+      AlertDialog(
+        title: Text("Change Team"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Text("Do you want to change your Team?", style: TextStyle(color: Colors.black, shadows: [Shadow(offset: Offset.zero)]),),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+              ElevatedButton(onPressed: () async {
+                var response = await functions.changeTeam(id.toString());
+                if(response.statusCode != 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(changeError);
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(changeSuccess);
+                Navigator.of(context).pop();
+                }, child: Text("Yes")),
+              ElevatedButton(onPressed: () {
+                Navigator.of(context).pop();
+                }, child: Text("No")),
+            ],)
+          ],
+        ),
+      )
+    );
+
   }
 
   void showAlertDialog(BuildContext context, String response) {

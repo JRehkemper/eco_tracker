@@ -41,9 +41,11 @@ class _LeaderBoard extends State
     child: Scaffold(
       backgroundColor: Colors.transparent,
               appBar: AppBar(/*title: Text("Leaderboard"),*/),
-              body: SingleChildScrollView(child: Center(
+              body: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Center(
                   child: Column(children: [
-                    Padding(padding: EdgeInsets.only(top: 15), child: Text("Leaderboard", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),),
+                    Padding(padding: EdgeInsets.only(top: 0), child: Text("Leaderboard", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),),
                     ListTile(title: Text("Username", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),), trailing: Text("Distance in Km", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),),
                     FutureBuilder(future: leaderboardFuture, builder: (context, AsyncSnapshot snapshot) {
                       if(!snapshot.hasData)
@@ -52,7 +54,7 @@ class _LeaderBoard extends State
                       }
                       else
                       {
-                        return ListView.builder(shrinkWrap:true, itemCount: leaderboard.length, itemBuilder: (BuildContext context, int index)
+                        return ListView.builder(shrinkWrap:true, physics: NeverScrollableScrollPhysics(), itemCount: leaderboard.length, itemBuilder: (BuildContext context, int index)
                         {
                           return InkWell(
                             onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen(leaderboard[index][2])));},

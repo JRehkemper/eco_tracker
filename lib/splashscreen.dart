@@ -33,6 +33,19 @@ class _SplashScreen extends State {
               mainUserID = result;
             });
           });
+          if (mainUserID == null) {
+            functions.readUsernameFromStorage().then((result) {
+              setState(() {
+                username = result;
+              });
+              functions.getUserID(username).then((result) {
+                setState(() {
+                  //mainUserID = result;
+                });
+              });
+            });
+          };
+
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         }
       else if (response.statusCode == 502)

@@ -175,13 +175,13 @@ class _ProfileScreen extends State {
                     margin: EdgeInsets.only(bottom: 15),
                     child: GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
                         children: [
-                          homeScreenCard(text1: "Your Score:", text2: "$score km", icon: Icons.leaderboard),
-                          homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", icon: Icons.score),
-                          homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", icon: Icons.query_builder),
-                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team", icon: Icons.group),
+                          homeScreenCard(text1: "Your Score:", text2: "$score km", displayIcon:true, icon: Icons.leaderboard),
+                          homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", displayIcon: true ,icon: Icons.score),
+                          homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", displayIcon: true, icon: Icons.query_builder),
+                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team", displayIcon: true, icon: Icons.group),
                           InkWell(
                             onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
-                            child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18, icon: Icons.check_box),
+                            child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18, displayIcon: true, icon: Icons.check_box),
                           ),
                         ]
                     ),

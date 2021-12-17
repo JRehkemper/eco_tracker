@@ -11,6 +11,7 @@ import 'route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 
 import 'main.dart';
@@ -60,10 +61,19 @@ class _HomeScreen extends State{
   late Future<List> historyFuture;
   var helpSnackBar = SnackBar(content: Text("Tap on the Tiles to get to the other Screens."));
   var achievementNumber = 0;
+  var navbarindex = 0;
+  
+  var pages = <Widget>[
+    homeScreen(),
+    LeaderBoard(),
+    RouteScreen(),
+    HistoryScreen(),
+    TeamsScreen(),
+  ];
 
   @override
   void initState() {
-    print(guestLogin);
+    /*print(guestLogin);
     communityRoutesFuture = createCommunityList();
     scoreboardFuture = createScoreboardList();
     if (!guestLogin) {
@@ -121,6 +131,7 @@ class _HomeScreen extends State{
     });
     checkSavedRoutes();
     super.initState();
+     */
   }
 
   @override
@@ -146,10 +157,11 @@ class _HomeScreen extends State{
             children: [
               Text("EcoTracker"),
               Spacer(),
-              IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline)),
+              //IconButton(onPressed: () {ScaffoldMessenger.of(context).showSnackBar(helpSnackBar);}, icon: Icon(Icons.help_outline)),
               IconButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProfileScreen(userID)));}, icon: Icon(Icons.account_circle_rounded))
-            ],) ),
-
+            ],
+          )
+      ),
       drawer: Drawer(
         child: Container(
           color: gradientend,
@@ -173,127 +185,25 @@ class _HomeScreen extends State{
           ),
         ),
       ),
-      //Body
-      body: SafeArea(child:
-          SingleChildScrollView(child: Stack(children: [
-              /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
-                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),*/
-              Column( children: [
-                //Hello
-                //Container(child: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), alignment: Alignment.centerLeft,),
-                Container(margin: EdgeInsets.only(top: 20, left: 10, bottom: 0, right: 10), padding: EdgeInsets.all(20), alignment: Alignment.topLeft,
-                  child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40),),),
-                Container(child: offline?Text("Our Servers are currently down for maintenance. If you record a route it will be submitted, as soon as the Servers are back online."):Text("")),
-                Container(child: guestLogin?ElevatedButton(onPressed: (()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()))), child: Text("Go to Login")):Text(""), margin: EdgeInsets.only(bottom: 30),),
-                //Tiles
-                GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
-                  children: [
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                      child: homeScreenCard(text1: "Your Score:", text2: "$score km", icon: Icons.leaderboard),),
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
-                      child: homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", icon: Icons.score)
-                    ),
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LeaderBoard()));},
-                      child: homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", icon: Icons.leaderboard)
-                    ),
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
-                      child: homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team", icon: Icons.group),
-                    ),
-                    // Your History
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
-                      child: Container(
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: [BoxShadow(
-                                color: Colors.black12,
-                                spreadRadius: 3,
-                                blurRadius: 20,
-                                offset: Offset(0,3))
-                            ]
-                        ),
-                        child: Column(
-                          children: [
-                            Text("History", style: TextStyle(fontSize: 20, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
-                            Spacer(),
-                            FutureBuilder(
-                                future: historyFuture,
-                                builder: (context, snapshot) {
-                                  if(!snapshot.hasData) {
-                                    return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),));
-                                  } else {
-                                    return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
-                                      Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
-                                      ],);
-                                  }
-                            }),
-                            Spacer(),
-                            Icon(Icons.calendar_today),
-                      ],),),),
-                    InkWell(
-                      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
-                      child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18, icon: Icons.check_box)
-                      ),
-                  ],),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        items: <Widget> [
+          Icon(Icons.home),
+          Icon(Icons.leaderboard_rounded),
+          Icon(Icons.add_location_alt_rounded),
+          Icon(Icons.calendar_today),
+          Icon(Icons.people_rounded)
+        ],
+        onTap: (index) {
+          setState(() {
+            navbarindex = index;
+          });
 
-                //Community History
-                Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.all(25),
-                    width: MediaQuery.of(context).size.width*80,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: [BoxShadow(
-                            color: Colors.black12,
-                            spreadRadius: 3,
-                            blurRadius: 20,
-                            offset: Offset(0,3)
-                        )]
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, color: Colors.black, shadows: []),),),
-                        FutureBuilder(
-                            future: communityRoutesFuture,
-                            builder: (context, AsyncSnapshot snapshot) {
-                              if(!snapshot.hasData) {
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                return ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap:true,
-                                    itemCount: 10,
-                                    itemBuilder: (BuildContext context, int index)
-                                {
-                                  return ListTile(
-                                    leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}", style: TextStyle(color: Colors.black, shadows: []),),
-                                    title:Text("${communityRoutes[index][0]}", style: TextStyle(color: Colors.black, shadows: [])),
-                                    trailing: Text("${communityRoutes[index][1]}", style: TextStyle(color: Colors.black, shadows: [])),
-                                  );
-                                });
-                              }
-                            }
-                        ),
-                    ],)
-                ),
-                Container(height: 75,),
-              ],),
-            ],)
-          ,),
+        },
       ),
-    bottomSheet: Container(width: MediaQuery.of(context).size.width, child: Padding(padding: EdgeInsets.only(top: 5, right: 15, bottom: 5, left: 15), child: ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start new Route")),), decoration: BoxDecoration(boxShadow: [BoxShadow(offset: Offset(0,0),blurRadius: 10,spreadRadius: 0,color: Colors.grey)], color: Colors.white, borderRadius: BorderRadius.horizontal(left: Radius.circular(10), right: Radius.circular(10))),)
-    ),);
+      //Body
+      body: pages[navbarindex])
+    );
   }
 
   Future<List> createScoreboardList() async {
@@ -390,13 +300,281 @@ class _HomeScreen extends State{
 
 }
 
+class homeScreen extends StatefulWidget {
+  @override
+  _homeScreen createState() => _homeScreen();
+}
+
+class _homeScreen extends State {
+  Functions functions = new Functions();
+  var username = mainUserID;
+  var userID = mainUserID;
+  var score = 0.0;
+  var co2 = 0.0;
+  var scoreboard;
+  var yourRank;
+  var team = false;
+  var teamID;
+  var teamRank;
+  var historyFuture;
+  var history;
+  var achievementNumber;
+  var communityRoutesFuture;
+  var communityRoutes;
+  var scoreboardFuture;
+
+  @override
+  void initState() {
+    print(guestLogin);
+    communityRoutesFuture = createCommunityList();
+    scoreboardFuture = createScoreboardList();
+    if (!guestLogin) {
+      /*functions.readUserIDFromStorage().then((String result) {
+        setState(() {
+          userID = result;
+          print("set UserID");
+        });
+      });*/
+      functions.getYourHistory().then((response) {
+        if (response.statusCode != 200) {
+          return;
+        }
+        var resp = json.decode(response.body);
+        setState(() {
+          history = resp;
+          print(history);
+          //print(DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(history[0][2])));
+        });
+      });
+      historyFuture = createHistory();
+      functions.readUsernameFromStorage().then((result) {
+        setState(() {
+          username = result;
+        });
+      });
+
+      functions.getYourScore(userID).then((response) {
+        if (response.statusCode != 200) {
+          return;
+        }
+        var resp = json.decode(response.body);
+        setState(() {
+          score = resp['totalDistance'];
+          if (score == null) {
+            score = 0.0;
+          }
+          co2 = score * 128.1 / 1000;
+        });
+        print("Score updated");
+      });
+    }
+    else {
+      setState(() {
+        historyFuture = guestHistory();
+        history = [["","0.00", "1970-01-01T00:00:00.000Z"]];
+        yourRank = 0;
+      });
+    }
+    functions.getNumberOfAchievments(userID).then((response) {
+      var resp = json.decode(response.body);
+      setState(() {
+        achievementNumber = resp['numberOfAchievements'];
+      });
+    });
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(child:
+    SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Stack(children: [
+      /*Container(decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/HomeBackground.png"), fit: BoxFit.fitWidth, alignment: FractionalOffset.bottomCenter)),
+                 width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height*0.3,),*/
+      Column( children: [
+        //Hello
+        //Container(child: IconButton(onPressed: () {}, icon: Icon(Icons.menu)), alignment: Alignment.centerLeft,),
+        Container(margin: EdgeInsets.only(top: 20, left: 10, bottom: 0, right: 10), padding: EdgeInsets.all(20), alignment: Alignment.topLeft,
+          child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40),),),
+        Container(child: offline?Text("Our Servers are currently down for maintenance. If you record a route it will be submitted, as soon as the Servers are back online."):Text("")),
+        Container(child: guestLogin?ElevatedButton(onPressed: (()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()))), child: Text("Go to Login")):Text(""), margin: EdgeInsets.only(bottom: 30),),
+        //Tiles
+        GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
+          children: [
+            homeScreenCard(text1: "Your Score:", text2: "$score km", displayIcon: false, icon: Icons.leaderboard),
+            InkWell(
+                onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
+                child: homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", displayIcon: true, icon: Icons.arrow_forward)
+            ),
+            homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", displayIcon: false, icon: Icons.leaderboard),
+            InkWell(
+              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
+              child: homeScreenCard(text1: "Team Rank", text2: team? "#$teamRank":"No Team", displayIcon: true, icon: Icons.arrow_forward),
+            ),
+            // Your History
+            InkWell(
+              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryScreen()));},
+              child: Container(
+                margin: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: 3,
+                        blurRadius: 20,
+                        offset: Offset(0,3))
+                    ]
+                ),
+                child: Column(
+                  children: [
+                    Text("History", style: TextStyle(fontSize: 20, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
+                    Spacer(),
+                    FutureBuilder(
+                        future: historyFuture,
+                        builder: (context, snapshot) {
+                          if(!snapshot.hasData) {
+                            return Center(child: Text("No Data",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []),));
+                          } else {
+                            return Column(children: [Text("${DateFormat('dd.MM.yyyy').format(DateTime.parse(history[0][2]))}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
+                              Text("${history[0][1]} Km", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, shadows: []), textAlign: TextAlign.center,),
+                            ],);
+                          }
+                        }),
+                    Spacer(),
+                    //Icon(Icons.calendar_today),
+                  ],),),),
+            InkWell(
+                onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
+                child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18, displayIcon: true, icon: Icons.arrow_forward)
+            ),
+          ],),
+
+        //Community History
+        /*Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.all(25),
+            width: MediaQuery.of(context).size.width*80,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [BoxShadow(
+                    color: Colors.black12,
+                    spreadRadius: 3,
+                    blurRadius: 20,
+                    offset: Offset(0,3)
+                )]
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text("Last 10 Routes", style: TextStyle(fontSize: 28, color: Colors.black, shadows: []),),),
+                FutureBuilder(
+                    future: communityRoutesFuture,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if(!snapshot.hasData) {
+                        return Center(
+                            child: CircularProgressIndicator());
+                      } else {
+                        return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap:true,
+                            itemCount: 10,
+                            itemBuilder: (BuildContext context, int index)
+                            {
+                              return ListTile(
+                                leading:Text("${DateFormat('dd.MM.yyyy - kk:mm').format(DateTime.parse(communityRoutes[index][2]))}", style: TextStyle(color: Colors.black, shadows: []),),
+                                title:Text("${communityRoutes[index][0]}", style: TextStyle(color: Colors.black, shadows: [])),
+                                trailing: Text("${communityRoutes[index][1]}", style: TextStyle(color: Colors.black, shadows: [])),
+                              );
+                            });
+                      }
+                    }
+                ),
+              ],)
+        )*/
+        Container(height: 75,),
+      ],),
+    ],)
+      ,),
+    );
+  }
+
+  Future<List> guestHistory() async {
+    print("guestHistory()");
+    return await new Future(() => [["1970-01-01T00:00:00.000Z","1","2"]]);
+  }
+
+  Future<List> createCommunityList() async {
+    var response = await functions.getCommunityRoutes();
+    var resp = json.decode(response.body);
+    setState(() {
+      communityRoutes = resp;
+    });
+    return resp;
+  }
+
+  Future<List> createHistory() async {
+    var response = await functions.getYourHistory();
+    var resp = json.decode(response.body);
+    setState(() {
+      history = resp;
+      print(history[0][1]);
+      print(history[0][2]);
+    });
+    return resp;
+  }
+
+  Future<List> createScoreboardList() async {
+    var response = await functions.getScoreBoard();
+    var resp = json.decode(response.body);
+    setState(() {
+      scoreboard = resp;
+    });
+    if(!guestLogin) {
+      var username = await functions.readUsernameFromStorage();
+      mainUsername = username;
+      for (int i = 0; i < scoreboard.length; i++) {
+        if (scoreboard[i][0] == username) {
+          setState(() {
+            yourRank = i + 1;
+            //userID = scoreboard[i][2];
+            teamID = scoreboard[i][3];
+          });
+        }
+      }
+      storage.write(key: "userID", value: userID.toString());
+    }
+    response = await functions.getTeamsList();
+    resp = json.decode(response.body);
+    print(resp);
+    for(int i = 0; i < resp.length; i++)
+    {
+      if(resp[i][0] == teamID)
+      {
+        setState(() {
+          teamRank = i + 1;
+          team = true;
+        });
+      }
+    }
+    return resp;
+  }
+
+}
+
 class homeScreenCard extends StatelessWidget {
   String text1;
   String text2;
   IconData icon;
   double fontsize;
+  bool displayIcon;
 
-  homeScreenCard({required this.text1, required this.text2, this.fontsize:20, required this.icon});
+  homeScreenCard({required this.text1, required this.text2, this.fontsize:20, required this.icon, required this.displayIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -420,7 +598,7 @@ class homeScreenCard extends StatelessWidget {
             Spacer(),
             Text(text2, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, shadows: [], color: Colors.black), textAlign: TextAlign.center),
             Spacer(),
-            Icon(icon),
+            displayIcon?Icon(icon):Text(""),
             Spacer(),
           ],
         ),

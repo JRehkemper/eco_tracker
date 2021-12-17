@@ -423,4 +423,9 @@ class Functions {
     final response = await http.post(Uri.parse(server+"/score/numberofachievements/"+userID.toString()));
     return response;
   }
+  
+  Future getUserID(username) async {
+    final response = await http.post(Uri.parse(server+"/token/getuserid/"+username));
+    return response;
+  }
 }
