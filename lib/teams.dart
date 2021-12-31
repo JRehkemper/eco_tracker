@@ -15,6 +15,7 @@ class _TeamsScreen extends State {
   var teamslist;
   late Future teamslistFuture;
   var score;
+  var userID;
   final changeError = SnackBar(content: Text("There was an error while changing your Team"));
   final changeSuccess = SnackBar(content: Text("Change successful"));
 
@@ -22,16 +23,17 @@ class _TeamsScreen extends State {
   void initState() {
     super.initState();
     teamslistFuture = createTeamsList();
-    var userID = functions.readUserIDFromStorage();
-    functions.getYourScore(userID).then((response) {
-      if (response.statusCode != 200) {
-        return;
-      }
-      var resp = json.decode(response.body);
-      setState(() {
-        score = resp['total Distance'];
+    functions.readUserIDFromStorage().then((result) {
+      userID = result;
+      functions.getYourScore(userID).then((response){
+        if (response.statusCode != 200) {
+          return;
+        }
+        var resp = json.decode(response.body);
+        score = resp['totalDistance'];
+        setState(() {
+        });
       });
-      print("Score updated");
     });
   }
 
@@ -92,12 +94,12 @@ class _TeamsScreen extends State {
   }
 
   Future createNewTeam() async {
-    if(score < 00)
+    if(score < 50)
       {
         showAlertDialog(context, "Your Score is too low. You need to have at least 100km to create a new Team.");
         return;
       }
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CreateTeamScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateTeamScreen()));
   }
 
   Future changeTeam(id) async {
@@ -122,10 +124,12 @@ class _TeamsScreen extends State {
                 }
                 ScaffoldMessenger.of(context).showSnackBar(changeSuccess);
                 Navigator.of(context).pop();
-                }, child: Text("Yes")),
+                }, child: Text("Yes"),
+              style: roundButtonStyle,),
               ElevatedButton(onPressed: () {
                 Navigator.of(context).pop();
-                }, child: Text("No")),
+                }, child: Text("No"),
+              style: roundButtonStyle,),
             ],)
           ],
         ),
@@ -135,18 +139,12 @@ class _TeamsScreen extends State {
   }
 
   void showAlertDialog(BuildContext context, String response) {
-    // set up the button
-    Widget okButton = TextButton(
-      child: Text("OK"),
-      onPressed: () {Navigator.pop(context);},
-    );
-
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Your Score is to low"),
-      content: Text(response),
+      content: Text(response, style: TextStyle(color: Colors.black, shadows: []),),
       actions: [
-        okButton,
+        ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("OK"), style: roundButtonStyle,),
       ],
     );
 

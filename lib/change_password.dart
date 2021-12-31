@@ -55,7 +55,7 @@ class _ChangePasswordScreen extends State {
               Padding(padding: EdgeInsets.all(0),
                   child: Text(passwordOld? "Old Password is not correct":"")),
               Padding(padding: EdgeInsets.all(0),
-                  child: ElevatedButton(onPressed: () {checkPassword();}, child: Text("Continue"),)),
+                  child: ElevatedButton(onPressed: () {checkPassword();}, child: Text("Continue"), style: roundButtonStyle,)),
             ],
           )
       ),),

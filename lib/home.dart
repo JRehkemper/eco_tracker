@@ -25,13 +25,8 @@ import 'change_password.dart';
 import 'co2.dart';
 import 'profile.dart';
 
-//Must till publish
-//TODO: CO2 Screen of Community
-//TODO: Icons
-
-//Optional:
-//TODO: Replace AppBar
-//TODO: Offline Mode
+//TODO: Cache Clear with Image Upload
+//TODO: ForgroundService Icon
 //TODO: News Channel
 //TODO: Community Goals
 //TODO: Route on Map
@@ -315,6 +310,7 @@ class _homeScreen extends State {
   var yourRank;
   var team = false;
   var teamID;
+  var teamname;
   var teamRank;
   var historyFuture;
   var history;
@@ -376,7 +372,9 @@ class _homeScreen extends State {
       });
     }
     functions.getNumberOfAchievments(userID).then((response) {
+      print(response.body);
       var resp = json.decode(response.body);
+
       setState(() {
         achievementNumber = resp['numberOfAchievements'];
       });
@@ -400,8 +398,136 @@ class _homeScreen extends State {
           child: Text((!guestLogin)?"Welcome Back ${username}!":"Hello Guest\n", style: TextStyle(fontSize: 40),),),
         Container(child: offline?Text("Our Servers are currently down for maintenance. If you record a route it will be submitted, as soon as the Servers are back online."):Text("")),
         Container(child: guestLogin?ElevatedButton(onPressed: (()=>Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()))), child: Text("Go to Login")):Text(""), margin: EdgeInsets.only(bottom: 30),),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            ),
+            //color: Color(0xffdbdbdb),
+            color: Colors.transparent,
+          ),
+          width: double.infinity,
+          padding: EdgeInsets.all(15),
+          child: Column(children: [
+            SizedBox(height: 0,),
+            Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                width: double.infinity,
+                child: Column(children: [
+                  Text("Overview", style: TextStyle(color: Colors.black, shadows: [], fontSize: 28),),
+                  SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Your Score:", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                      Text("$score km", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),)
+                    ],
+                  ),
+                  Divider(color: Colors.grey,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Your Rank:", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                      Text("#$yourRank", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                    ],
+                  ),
+                  Divider(color: Colors.grey,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Your Team:", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                      Text("$teamname", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                    ],
+                  ),
+                ],)
+            ),
+            SizedBox(height: 10,),
+            InkWell(
+              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CO2Screen()));},
+              child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: double.infinity,
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Saved CO2", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                        Row(
+                          children: [
+                            Text("${co2.toStringAsFixed(2)} Kg", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                            Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],)
+              ),
+            ),
+            SizedBox(height: 10,),
+            InkWell(
+              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => TeamsScreen()));},
+              child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: double.infinity,
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Team Rank", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                        Row(
+                          children: [
+                            Text("#$teamRank", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                            Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],)
+              ),
+            ),
+            SizedBox(height: 10,),
+            InkWell(
+              onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
+              child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: double.infinity,
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Achievements", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                        Row(
+                          children: [
+                            Text("$achievementNumber", style: TextStyle(color: Colors.black, shadows: [], fontSize: 18),),
+                            Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],)
+              ),
+            ),
+          ],),),
+
         //Tiles
-        GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
+        /*GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
           children: [
             homeScreenCard(text1: "Your Score:", text2: "$score km", displayIcon: false, icon: Icons.leaderboard),
             InkWell(
@@ -451,7 +577,7 @@ class _homeScreen extends State {
                 onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
                 child: homeScreenCard(text1:"Achievements", text2: "$achievementNumber", fontsize: 18, displayIcon: true, icon: Icons.arrow_forward)
             ),
-          ],),
+          ],),*/
 
         //Community History
         /*Container(
@@ -545,6 +671,9 @@ class _homeScreen extends State {
             //userID = scoreboard[i][2];
             teamID = scoreboard[i][3];
           });
+          var response2 = await functions.getTeamName(teamID.toString());
+          var resp2 = json.decode(response2.body);
+          teamname = resp2["TeamName"];
         }
       }
       storage.write(key: "userID", value: userID.toString());

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bike_app/main.dart';
 import 'package:bike_app/welcome_guide.dart';
 
@@ -19,38 +21,49 @@ class _SplashScreen extends State {
   var username;
   var access_token;
   var refresh_token;
+  var userIDdone;
 
   @override
   void initState() {
     super.initState();
-    try{functions.autoLoginStart().then((response) {
+    try{functions.autoLoginStart().then((response) async {
       if (response != null && response.statusCode == 200)
         {
           print("success");
           //showAlertDialog(context, response.body);
-          functions.readUserIDFromStorage().then((String result) {
-            setState(() {
+          await functions.readUserIDFromStorage().then((String result) async {
+            //setState(() {
+            if(result != "0") {
               mainUserID = result;
-            });
-          });
-          if (mainUserID == null) {
-            functions.readUsernameFromStorage().then((result) {
-              setState(() {
-                username = result;
-              });
-              functions.getUserID(username).then((result) {
-                setState(() {
-                  //mainUserID = result;
+              if (mainUserID == "" || mainUserID == null) {
+                await functions.readUsernameFromStorage().then((result) async {
+                  //setState(() {
+                  username = result;
+                  //});
+                  await functions.getUserID(username).then((result) {
+                    //print("Get User ID");
+                    //setState(() {
+                    var resp = json.decode(result.body);
+                    //print(resp['userID']);
+                    mainUserID = resp['userID'].toString();
+                    userIDdone = true;
+                    //});
+                  });
                 });
-              });
-            });
-          };
+              };
+              print("Main User ID in Splash " + mainUserID);
+              //});
+            }
+          });
 
+          await userIDdone;
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         }
       else if (response.statusCode == 502)
         {
           offline = true;
+          showAlertDialog(context, "The Sever is currently unreachable. Check your Internet connection or try again later.");
+          print("Server offline");
         }
       else {
         guestLogin = true;
@@ -93,7 +106,7 @@ class _SplashScreen extends State {
     return Scaffold(backgroundColor: Colors.green,
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image.asset('assets/Images/icon.png', fit: BoxFit.contain)
+          Image.asset('assets/Images/org_thebus_foregroundserviceplugin_notificationicon.png', fit: BoxFit.contain)
         ],),
       ),
     );

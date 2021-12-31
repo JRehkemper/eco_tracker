@@ -36,7 +36,10 @@ class _RouteScreen extends State {
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Text("Click start and we will begin to record your distance. Every Kilometer will be added to your Score and the Score of your Team. You will also start to earn Achievements."),
         ),
-        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));}, child: Text("Start")),
+        ElevatedButton(
+            onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RouteRecording()));},
+            child: Text("Start"),
+            style: roundButtonStyle,),
       ],),
     );
   }
@@ -324,7 +327,7 @@ class _RouteRecording extends State {
 
   void showAlertDialogTwoButton(BuildContext context, String title, String text)  {
     // set up the button
-    Widget button_1 = TextButton(
+    /*Widget button_1 = TextButton(
       child: Text("Yes"),
       onPressed: () async {
         print("pressed");
@@ -349,8 +352,8 @@ class _RouteRecording extends State {
             storage.write(key: "lastRoute", value: distanceInKM.toString());
           }
         },
-    );
-    Widget button_2 = TextButton(
+    );*/
+    /*Widget button_2 = TextButton(
       child: Text("Delete Route"),
       onPressed: ()  {
         resetRecording();
@@ -364,20 +367,59 @@ class _RouteRecording extends State {
            return HomeScreen();
            },), (route)=> false,);
       },
-    );
-    Widget button_3 = TextButton(
+    );*/
+    /*Widget button_3 = TextButton(
       child: Text("Cancle"),
       onPressed: () => Navigator.pop(context),
-    );
+    );*/
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text(title),
-      content: Text(text),
+      content: Text(text, style: TextStyle(color: Colors.black, shadows: []),),
       actions: [
-        button_1,
-        button_2,
-        button_3
+        ElevatedButton(
+            onPressed: () async {
+              print("pressed");
+              var response = await functions.submitRoute(distanceInKM);
+              print(response.body);
+              if(response.statusCode == 200)
+              {
+                ScaffoldMessenger.of(context).showSnackBar(submitSnackbar);
+                resetRecording();
+                Navigator.pop(context);
+                postimer.cancel();
+                try{
+                  rectimer.cancel();
+                } catch (error) {}
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
+                  return HomeScreen();
+                },), (route)=> false,);
+              }
+              else
+              {
+                ScaffoldMessenger.of(context).showSnackBar(submitErrSnackbar);
+                storage.write(key: "lastRoute", value: distanceInKM.toString());
+              }
+            },
+            child: Text("Submit")),
+        ElevatedButton(
+            onPressed: ()  {
+              resetRecording();
+              postimer.cancel();
+              try {
+                rectimer.cancel();
+              }
+              catch (error) {}
+              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (BuildContext context) {
+                return HomeScreen();
+              },), (route)=> false,);
+            },
+            child: Text("Delete Route")),
+        ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"))
       ],
     );
 

@@ -28,6 +28,7 @@ class _ProfileScreen extends State {
   var scoreboard;
   var yourRank = 0;
   var teamID;
+  var teamName;
   var team = false;
   var teamRank;
   late Future pageFuture;
@@ -83,7 +84,12 @@ class _ProfileScreen extends State {
       }
       print("teamID "+teamID);
       print("Done initPage");
-
+      functions.getTeamName(teamID).then((response) {
+        var resp = json.decode(response.body);
+        setState(() {
+          teamName = resp['TeamName'];
+        });
+      });
     });
     createScoreboardList();
     functions.getNumberOfAchievments(userID).then((response) {
@@ -104,7 +110,9 @@ class _ProfileScreen extends State {
       _image = image;
       fileImage = File(image!.path);
     });
-    functions.uploadProfileImage(fileImage);
+    await functions.uploadProfileImage(fileImage);
+    PaintingBinding.instance!.imageCache!.clear();
+
   }
 
   Future<List> createScoreboardList() async {
@@ -152,25 +160,29 @@ class _ProfileScreen extends State {
             child: SingleChildScrollView(
                 child: Column(children: [
                   Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(username, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
+                  ),
+                  Padding(
                       padding: EdgeInsets.all(15),
                       child: Stack(children: [
                         Image.network(server+"/user/getProfilePicture/"+userID.toString(), width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
                         Positioned.fill(
                           child: Align(
                             alignment: Alignment.bottomRight,
-                            child: myuser? IconButton(
-                                onPressed: ()  {
-                                  getImage();
-                                },
-                                icon: Icon(Icons.edit)):
-                            SizedBox.shrink(),
+                            child: myuser? MaterialButton(
+                              color: Colors.green,
+                              onPressed: () {
+                                getImage();
+                              },
+                              child: Icon(Icons.edit),
+                              shape: CircleBorder(),
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                            ):SizedBox.shrink()
                           ),
                         ),
                       ],),),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(username, style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 20, color: Colors.black12)]),),
-                  ),
+
                   Container(
                     margin: EdgeInsets.only(bottom: 15),
                     child: GridView.count(physics: NeverScrollableScrollPhysics(), crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 10, shrinkWrap: true, padding: EdgeInsets.symmetric(horizontal: 20),
@@ -178,7 +190,7 @@ class _ProfileScreen extends State {
                           homeScreenCard(text1: "Your Score:", text2: "$score km", displayIcon:true, icon: Icons.leaderboard),
                           homeScreenCard(text1: "You saved:", text2: "${co2.toStringAsFixed(3)} kg CO2", displayIcon: true ,icon: Icons.score),
                           homeScreenCard(text1: "Your Rank:", text2: "#$yourRank", displayIcon: true, icon: Icons.query_builder),
-                          homeScreenCard(text1: "Team ID", text2: team? "#$teamID":"No Team", displayIcon: true, icon: Icons.group),
+                          homeScreenCard(text1: "Team:", text2: team? "$teamName":"No Team", displayIcon: true, icon: Icons.group),
                           InkWell(
                             onTap: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AchievementScreen(userID)));},
                             child: homeScreenCard(text1: "Achievements", text2: "$achievementNumber", fontsize: 18, displayIcon: true, icon: Icons.check_box),

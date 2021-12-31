@@ -22,6 +22,20 @@ var fonthint = TextStyle(
   shadows: fontshadow,
 );
 
+var roundButtonStyle = ElevatedButton.styleFrom(
+    shape: new RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+    )
+);
+
+var roundButtonStyleAlt = ElevatedButton.styleFrom(
+  primary: Color(0xffffffff),
+  onPrimary: Colors.black,
+    shape: new RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+    ),
+);
+
 void main() {
   runApp(MyApp());
 }

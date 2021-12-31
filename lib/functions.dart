@@ -39,10 +39,16 @@ class Functions {
   Future getAuthTest(String access_token, String refresh_token) async {
     var map = new Map<String, String>();
     map['Cookie'] = "access_token_cookie="+access_token+";refresh_token_cookie="+refresh_token;
-    final response = await http.post(Uri.parse(server+"/token/auth"),headers: map);
-    print("getAuthTest");
-    print(response.body);
-    return response;
+    try {
+      final response = await http.post(Uri.parse(server+"/token/auth"),headers: map);
+      print("getAuthTest");
+      print(response.body);
+      return response;
+    }
+    catch (e){
+      print("GetAuthTest Failed");
+      return http.Response('Error', 401);
+    }
   }
 
   Future getRefreshToken(String access_token, String refresh_token) async {
@@ -104,21 +110,27 @@ class Functions {
   }
 
   Future<String> readAccessTokenFromStorage() async {
-    var access_token;
-    if(!guestLogin) {
-      access_token = await storage.read(key: "access_token");
+    var access_token = "";
+    try {
+      access_token = (await storage.read(key: "access_token"))!;
+      print("Access Token Read");
     }
-    else {  access_token = ""; }
-    return access_token!;
+    catch (e) {
+      print("Read Accesstoken - No access Token Found");
+      access_token = "";
+    }
+    return access_token;
   }
 
   Future<String> readRefreshTokenFromStorage() async {
-    var refresh_token;
-    if(!guestLogin) {
-      refresh_token = await storage.read(key: "refresh_token");
+    var refresh_token = "";
+    try {
+      refresh_token = (await storage.read(key: "refresh_token"))!;
     }
-    else { refresh_token = ""; }
-    return refresh_token!;
+    catch (e) {
+      refresh_token = "";
+    }
+    return refresh_token;
   }
 
   Future<String> readSaltFromStorage() async {
@@ -127,8 +139,13 @@ class Functions {
   }
 
   Future<String> readUserIDFromStorage() async {
-    var userID = await storage.read(key: "userID");
-    return userID!;
+    try {
+      var userID = await storage.read(key: "userID");
+      return userID!;
+    }
+    catch (e) {
+      return "0";
+    }
   }
 
   Future<String> readTeamIDFromStorage() async {
@@ -264,24 +281,32 @@ class Functions {
       var access_token = await readAccessTokenFromStorage();
       var refresh_token = await readRefreshTokenFromStorage();
       print("Done Reading Tokens");
-      var response = await getRefreshToken(access_token, refresh_token);
-      print(response.body);
-      Map<String, dynamic> resp = json.decode(response.body);
-      access_token = resp['access_token'];
-      refresh_token = resp['refresh_token'];
-      print("write Tokens to storage");
-      storage.write(key: "access_token", value: access_token);
-      storage.write(key: "refresh_token", value: refresh_token);
+      if (refresh_token != "")
+        {
+          var response = await getRefreshToken(access_token, refresh_token);
+          print(response.body);
+          Map<String, dynamic> resp = json.decode(response.body);
+          access_token = resp['access_token'];
+          refresh_token = resp['refresh_token'];
+          print("write Tokens to storage");
+          storage.write(key: "access_token", value: access_token);
+          storage.write(key: "refresh_token", value: refresh_token);
 
-      //var username = await readUsernameFromStorage();
-      response = await getAuthTest(access_token, refresh_token);
-      print("token valid");
-      return response;
+          //var username = await readUsernameFromStorage();
+          response = await getAuthTest(access_token, refresh_token);
+          print("token valid");
+          return response;
+        }
+      else {
+        print("No Token");
+        return http.Response('Error', 401);
+      }
     }
     catch (error)
     {
       print(error);
-      return http.Response('Error', 403);
+      print("AutoLoginStart Error");
+      return http.Response('Error', 502);
     }
   }
 
@@ -426,6 +451,11 @@ class Functions {
   
   Future getUserID(username) async {
     final response = await http.post(Uri.parse(server+"/token/getuserid/"+username));
+    return response;
+  }
+
+  Future getTeamName(teamID) async {
+    final response = await http.post(Uri.parse(server+"/score/teamname/"+teamID));
     return response;
   }
 }

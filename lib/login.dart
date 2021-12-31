@@ -6,6 +6,7 @@ import 'main.dart';
 import 'home.dart';
 import 'registration.dart';
 import 'functions.dart';
+import 'splashscreen.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,14 +67,17 @@ class _LoginScreen extends State {
                   Padding(padding: EdgeInsets.all(0),
                       child: Text(emailActivation? "Please Confirm your Email first." : "")),
                   Padding(padding: EdgeInsets.all(0),
-                    child: TextButton(child: Text("Forgot my password", style: TextStyle(color: Colors.white,),), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));},),),
+                    child:
+                    ElevatedButton(child: Text("Forgot my password", style: TextStyle(shadows: []),), onPressed: () {}, style: roundButtonStyleAlt, ),
+                    ),
+                    //TextButton(child: Text("Forgot my password", style: TextStyle(color: Colors.white,),), onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ResetPasswordScreen()));},),),
                   Padding(padding: EdgeInsets.all(0),
-                      child: ElevatedButton(onPressed: () => loginProcedure(usernameCon.text, passwordCon.text, context), child: Text("Login",))),
+                      child: ElevatedButton(onPressed: () => loginProcedure(usernameCon.text, passwordCon.text, context), child: Text("Login",), style: roundButtonStyle,)),
                   //Spacer(),
                   Padding(padding: EdgeInsets.only(top: 50),
                       child: Text("You are new here? Create an Account.")),
                   Padding(padding: EdgeInsets.all(10),
-                    child: ElevatedButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RegistrationScreen())), child: Text("Registration"),),),
+                    child: ElevatedButton(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => RegistrationScreen())), child: Text("Registration"), style: roundButtonStyle,),),
                   //Spacer(),
                 ],
               ),)
@@ -102,7 +106,23 @@ class _LoginScreen extends State {
     response = await functions.getActivationTest(username);
     var resp = json.decode(response.body);
     storage.write(key: "email", value: resp["email"]);
-    if(response.statusCode != 200 || resp['status'] == 0) { setState(() { emailActivation = true; }); return;}
+    if( response.statusCode != 200 || resp['status'] == 0) {
+        setState(() {
+          emailActivation = true;
+        });
+      return;
+    }
+
+    functions.getUserID(username).then((result) {
+      functions.getUserID(username).then((result) {
+        print("Get User ID");
+        //setState(() {
+        var resp = json.decode(result.body);
+        print(resp['userID']);
+        mainUserID = resp['userID'].toString();
+        //});
+      });
+    });
 
     print("storage write");
     storage.write(key: "access_token", value: jwt["access_token"]);
@@ -112,13 +132,15 @@ class _LoginScreen extends State {
     storage.write(key: "email", value: jwt["email"]);
     storage.write(key: "teamID", value: jwt["teamID"].toString());
 
+
+
     //Test JWT Tokens
     var access_token = await storage.read(key: "access_token");
     var refresh_token = await storage.read(key: "refresh_token");
     response = await functions.getAuthTest(access_token!, refresh_token!);
     if(response.statusCode != 200) { setState(() { loginFailed = true; }); return;}
     guestLogin = false;
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => SplashScreen()));
   }
 
 }
@@ -161,7 +183,7 @@ class _EmailActivationScreen extends State {
           Text("We have sent you an EMail with an activation Link.\n"),
           Text("Please check your EMail Inbox (also the spam).\n"),
           Text("You need to activate your account before you can login.\n", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18), textAlign: TextAlign.center,),
-          ElevatedButton(onPressed: () { continueLogin(); }, child: Text("Activation complete")),
+          ElevatedButton(onPressed: () { continueLogin(); }, child: Text("Activation complete"), style: roundButtonStyle,),
           Spacer(),
         ]),
         ),

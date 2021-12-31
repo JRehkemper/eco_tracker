@@ -62,8 +62,8 @@ class _ResetPasswordScreen extends State {
                       child: Text(error? "Something went wrong. Please try again later." : "")),
                   Padding(padding: EdgeInsets.all(0),
                       child: resetDone?
-                        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));}, child: Text("Got to Login")):
-                        ElevatedButton(onPressed: () {forgotPassword(usernameCon.text);}, child: Text("Send"))
+                        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));}, child: Text("Got to Login"), style: roundButtonStyle,):
+                        ElevatedButton(onPressed: () {forgotPassword(usernameCon.text);}, child: Text("Send"), style: roundButtonStyle,)
                       ),
                 ],
               )

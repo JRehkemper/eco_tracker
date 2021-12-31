@@ -67,10 +67,10 @@ class _RegistrationScreen extends State {
           child: TextField(decoration: InputDecoration(border: OutlineInputBorder(),hintText: "Confirm Password", hintStyle: fonthint), controller: pass2Con, obscureText: true,)),
         Padding(padding: EdgeInsets.only(bottom: 20),
           child: Text(passwordCheck? "Passwords do not match" : ""),),
-        ElevatedButton(onPressed: () => registrationProcedure(emailCon.text, userCon.text, pass1Con.text, pass2Con.text, context), child: Text("Continue")),
+        ElevatedButton(onPressed: () => registrationProcedure(emailCon.text, userCon.text, pass1Con.text, pass2Con.text, context), child: Text("Continue"), style: roundButtonStyle,),
         Padding(padding: EdgeInsets.only(top: 20),
           child: Text("Already have an Account?"),),
-        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));}, child: Text("Go to Login"))
+        ElevatedButton(onPressed: () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));}, child: Text("Go to Login"), style: roundButtonStyle,)
 
       ],),
       )

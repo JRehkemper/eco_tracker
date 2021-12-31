@@ -36,9 +36,15 @@ class _CreateTeamScreen extends State {
         Padding(padding: EdgeInsets.all(15),
           child: Text("If you create a new Team you will leave your old one."),),
         Padding(padding: EdgeInsets.all(15),
-          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter Teamname",), controller: teamnameCon,),),
+          child: TextField(decoration: InputDecoration(border: OutlineInputBorder(), hintText: "Enter Teamname", hintStyle: TextStyle(color: Colors.white)), controller: teamnameCon,),),
         Padding(padding: EdgeInsets.all(15),
-          child: ElevatedButton(onPressed: () {createTeam();}, child: Text("Create"),),)
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("Go Back"), style: roundButtonStyle,),
+              ElevatedButton(onPressed: () {createTeam();}, child: Text("Create"), style: roundButtonStyle,),
+            ],
+          ),)
     ],))),)
     );
   }
